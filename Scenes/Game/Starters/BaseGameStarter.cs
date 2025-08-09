@@ -1,0 +1,17 @@
+﻿using Fantoria.Scripts.Content.LoadingScreen;
+
+namespace Fantoria.Scenes.Game.Starters;
+
+public abstract class BaseGameStarter
+{
+    protected const string Localhost = "127.0.0.1";
+    protected const string DefaultHost = Localhost;
+    protected const int DefaultPort = 25566;
+
+    public virtual void Init(Game game)
+    {
+        if (game.IsClient()) Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
+        
+        if (game.IsClient()) Service.LoadingScreen.Clear();
+    }
+}
