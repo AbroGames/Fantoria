@@ -1,0 +1,31 @@
+﻿using Fantoria.Scripts.Content.LoadingScreen;
+
+namespace Fantoria.Scenes.Root.Starters;
+
+public class ClientRootStarter : BaseRootStarter
+{
+
+    public override void Init(Root root)
+    {
+	    base.Init(root);
+        Log.Info("Initializing Client...");
+        
+        Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
+    }
+
+    public override void Start(Root root)
+    {
+	    base.Start(root);
+        Log.Info("Starting Client...");
+        
+        if (Service.CmdArgs.Client.AutoConnect) //TODO в доку новую инфу про то, что достаточно AutoConnect флага
+        {
+	        Service.MainScene.ConnectToMultiplayerGame(Service.CmdArgs.Client.AutoConnectIp, Service.CmdArgs.Client.AutoConnectPort);
+        }
+        else
+        {
+	        Service.MainScene.StartMainMenu();
+        }
+        Service.LoadingScreen.Clear();
+    }
+}
