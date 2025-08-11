@@ -14,6 +14,6 @@ public partial class LoadingScreen : CanvasLayer
 
     public void SetText(string loadingText)
     {
-        LoadingLabel.Text = loadingText.ToUpper();
+        LoadingLabel.Text = loadingText;
     }
 }

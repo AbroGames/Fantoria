@@ -14,8 +14,9 @@ public abstract class BaseRootStarter
         
         Log.Info("Initializing base...");
         
-        Service.LoadingScreen.Init(root.LoadingScreenContainer, null/*TODO*/);
-        Service.MainScene.Init(root.MainSceneContainer, null/*TODO*/);
+        root.PackedScenes.Init();
+        Service.LoadingScreen.Init(root.LoadingScreenContainer, root.PackedScenes.LoadingScreen);
+        Service.MainScene.Init(root.MainSceneContainer, root.PackedScenes.MainMenu);
     }
 
     public virtual void Start(Root root)

@@ -10,6 +10,7 @@ public partial class Root : Node2D
     
     [Export] [NotNull] public NodeContainer MainSceneContainer { get; set; }
     [Export] [NotNull] public NodeContainer LoadingScreenContainer { get; set; }
+    [Export] [NotNull] public PackedScenes PackedScenes { get; set; }
 
     private RootStarterManager _rootStarterManager;
     
