@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://t2ls4ub3hyoe"]
+[gd_scene load_steps=4 format=3 uid="uid://t2ls4ub3hyoe"]
 
 [ext_resource type="Script" uid="uid://cyu2dncr70f6o" path="res://Scenes/Screen/MainMenu/MainMenu.cs" id="1_ll75u"]
 [ext_resource type="Texture2D" uid="uid://d11clyn74gh6h" path="res://Assets/Textures/icon.png" id="1_micco"]
+[ext_resource type="Script" uid="uid://c6ba6f3sfoso0" path="res://Lib/Nodes/Container/NodeContainer.cs" id="2_8wwy4"]
 
 [node name="MainMenu" type="Node2D" node_paths=PackedStringArray("BackgroundContainer", "MenuContainer")]
 script = ExtResource("1_ll75u")
@@ -13,12 +14,14 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("2_8wwy4")
 
 [node name="MenuContainer" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("2_8wwy4")
 
 [node name="TEST-DEL-IT" type="Sprite2D" parent="MenuContainer"]
 scale = Vector2(0.2, 0.2)
