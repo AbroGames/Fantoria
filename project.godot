@@ -18,3 +18,7 @@ config/icon="uid://d11clyn74gh6h"
 [dotnet]
 
 project/assembly_name="Fantoria"
+
+[editor]
+
+run/main_run_args="--logpush"

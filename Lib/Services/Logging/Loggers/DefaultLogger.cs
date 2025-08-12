@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using Godot;
 
@@ -6,6 +7,10 @@ namespace Fantoria.Lib.Services.Logging.Loggers;
 
 internal class DefaultLogger : ILogger
 {
+
+    public static readonly string LogPushCmdArg = "--logpush";
+    private bool _defaultPushBehavior = OS.GetCmdlineArgs().Contains(LogPushCmdArg);
+    
     public void Debug(object msg = null)
     {
         Print(msg, "gray");
@@ -18,17 +23,17 @@ internal class DefaultLogger : ILogger
 
     public void Warning(object msg = null, Exception exception = null)
     {
-        Print(msg, "yellow", exception, pushWarning: true);
+        Print(msg, "yellow", exception, pushWarning: _defaultPushBehavior);
     }
 
     public void Error(object msg = null, Exception exception = null)
     {
-        Print(msg, "orange", exception, pushError: true);
+        Print(msg, "orange", exception, pushError: _defaultPushBehavior);
     }
 
     public void Critical(object msg = null, Exception exception = null)
     {
-        Print(msg, "red", exception, pushError: true);
+        Print(msg, "red", exception, pushError: _defaultPushBehavior);
     }
 
     private void Print(object msg = null, string color = null, Exception exception = null, bool pushWarning = false, bool pushError = false)
