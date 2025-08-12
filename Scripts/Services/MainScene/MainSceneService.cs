@@ -29,14 +29,18 @@ public class MainSceneService
     
     public void StartSingleplayerGame()
     {
-        Game game = new Game().Init(new SingleplayerGameStarter());
+        Game game = new Game();
         _mainSceneContainer.ChangeStoredNode(game);
+        
+        game.Init(new SingleplayerGameStarter());
     }
     
     public void ConnectToMultiplayerGame(string host = null, int? port = null)
     {
-        Game game = new Game().Init(new ConnectToMultiplayerGameStarter(host, port));
+        Game game = new Game();
         _mainSceneContainer.ChangeStoredNode(game);
+        
+        game.Init(new ConnectToMultiplayerGameStarter(host, port));
     }
     
     /// <summary>
@@ -46,11 +50,19 @@ public class MainSceneService
     /// <param name="createDedicatedServerProcess">If true, create a new OS process running a dedicated server, and have this process connect to it as a client.</param>
     public void HostMultiplayerGameAsClient(int? port = null, bool? createDedicatedServerProcess = null)
     {
-        string adminNickname = ""; //TODO current user nickname
-        Game game = createDedicatedServerProcess.GetValueOrDefault(false) ?
-            new Game().Init(new HostDedicatedServerAndConnectGameStarter(port, adminNickname, true)) :
-            new Game().Init(new HostMultiplayerGameStarter(port, adminNickname));
+        Game game = new Game();
         _mainSceneContainer.ChangeStoredNode(game);
+        
+        string adminNickname = ""; //TODO current user nickname
+        
+        if (createDedicatedServerProcess.GetValueOrDefault(false))
+        {
+            game.Init(new HostDedicatedServerAndConnectGameStarter(port, adminNickname, true));
+        }
+        else
+        {
+            game.Init(new HostMultiplayerGameStarter(port, adminNickname));
+        }
     }
     
     /// <summary>
@@ -61,8 +73,10 @@ public class MainSceneService
     /// <param name="parentPid">If this process is a dedicated server created from a client, use the PID of the client process.</param>
     public void HostMultiplayerGameAsDedicatedServer(int? port = null, string adminNickname = null, int? parentPid = null)
     {
-        Game game = new Game().Init(new HostMultiplayerGameStarter(port, adminNickname, parentPid));
+        Game game = new Game();
         _mainSceneContainer.ChangeStoredNode(game);
+        
+        game.Init(new HostMultiplayerGameStarter(port, adminNickname, parentPid));
     }
     
     [Obsolete("Global accessor to MainMenu, like Singleton")] //TODO удалить методы, если не потребуются
