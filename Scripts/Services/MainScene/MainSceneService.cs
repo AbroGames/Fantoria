@@ -39,15 +39,29 @@ public class MainSceneService
         _mainSceneContainer.ChangeStoredNode(game);
     }
     
-    public void HostMultiplayerGame(int? port = null, string adminNickname = null)
+    /// <summary>
+    /// Start new server and connect to them. Use in client process.
+    /// </summary>
+    /// <param name="port">Port number on which the server will listen.</param>
+    /// <param name="createDedicatedServerProcess">If true, create a new OS process running a dedicated server, and have this process connect to it as a client.</param>
+    public void HostMultiplayerGameAsClient(int? port = null, bool? createDedicatedServerProcess = null)
     {
-        Game game = new Game().Init(new HostMultiplayerGameStarter(port, adminNickname));
+        string adminNickname = ""; //TODO current user nickname
+        Game game = createDedicatedServerProcess.GetValueOrDefault(false) ?
+            new Game().Init(new HostDedicatedServerAndConnectGameStarter(port, adminNickname, true)) :
+            new Game().Init(new HostMultiplayerGameStarter(port, adminNickname));
         _mainSceneContainer.ChangeStoredNode(game);
     }
     
-    public void HostNewDedicatedServerGame(int? port = null, string adminNickname = null, bool? showGui = null)
+    /// <summary>
+    /// Start new server. Use in dedicated server process.
+    /// </summary>
+    /// <param name="port">Port number on which the server will listen.</param>
+    /// <param name="adminNickname">This user can manage the server</param>
+    /// <param name="parentPid">If this process is a dedicated server created from a client, use the PID of the client process.</param>
+    public void HostMultiplayerGameAsDedicatedServer(int? port = null, string adminNickname = null, int? parentPid = null)
     {
-        Game game = new Game().Init(new HostNewDedicatedServerGameStarter(port, adminNickname, showGui));
+        Game game = new Game().Init(new HostMultiplayerGameStarter(port, adminNickname, parentPid));
         _mainSceneContainer.ChangeStoredNode(game);
     }
     

@@ -25,3 +25,6 @@ public partial class Game : Node2D
 //TODO В каждой ноде один раз получать в _Ready текущий Game через сервис? Или через родителей? А все остальные GameServices вложены в Game?
 
 //TODO Чекнуть все ошибки it can be readonly (создать такую искусственно, а потом поискать по всем)
+
+//TODO в Game в завершение работы (по аналогии с ProcessChecker), сделать Multiplayer.MultiplayerPeer = null; Иначе MultiplayerPeer останется висеть у рута. Так же занулять MultiplayerPeer при Connection fail
+//TODO Затестить что будет, если вызвать RPC на который у тебя нет прав. Или если самому выдать себе права на какой-то вызов RPC. Будет ли он отослан остальным клиентам или заблочиться на сервере? 

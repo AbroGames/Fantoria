@@ -10,8 +10,6 @@ public abstract class BaseGameStarter
 
     public virtual void Init(Game game)
     {
-        if (game.IsClient()) Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
         
-        if (game.IsClient()) Service.LoadingScreen.Clear();
     }
 }

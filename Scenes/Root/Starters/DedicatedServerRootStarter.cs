@@ -19,8 +19,9 @@ public class DedicatedServerRootStarter : BaseRootStarter
         base.Start(root);
         Log.Info("Starting DedicatedServer...");
 
-        Service.MainScene.HostMultiplayerGame(
+        Service.MainScene.HostMultiplayerGameAsDedicatedServer(
             Service.CmdArgs.DedicatedServer.Port,
-            Service.CmdArgs.DedicatedServer.Admin);
+            Service.CmdArgs.DedicatedServer.Admin,
+            Service.CmdArgs.DedicatedServer.ParentPid);
     }
 }
