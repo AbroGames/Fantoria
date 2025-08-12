@@ -7,10 +7,17 @@ public partial class MainMenu : Node2D
 {
     [Export] [NotNull] public NodeContainer BackgroundContainer { get; private set; }
     [Export] [NotNull] public NodeContainer MenuContainer { get; private set; }
+    
+    [Export] [NotNull] public Button Button { get; private set; } //TODO only for test, del
 	
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
+        
+        Button.Pressed += () => //TODO del
+        {
+            Service.MainScene.HostMultiplayerGameAsClient(25580, true);
+        };
     }
     
     //TODO в сервис? Но по сути тогда снова засинглтоним меню. В сервисы можно выносить только сцены/вещи существующие в любой момент времени игры (и в меню и в игре).
