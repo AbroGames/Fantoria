@@ -12,16 +12,21 @@ public partial class ProcessDeadChecker : Node
     public Func<int, string> LogMessageGenerator { get; set; } = pid => $"Process {pid} is dead.";
     public Action ActionWhenDead { get; set; }
     
-    private AutoCooldown ProcessDeadCheckCooldown = new(5);
-
-    public override void _Ready()
+    private AutoCooldown _processDeadCheckCooldown = new(5);
+    
+    public ProcessDeadChecker Init(int processPid, Action actionWhenDead, Func<int, string> logMessageGenerator = null)
     {
-        ProcessDeadCheckCooldown.ActionWhenReady += CheckProcessIsDead;
+        ProcessPid = processPid;
+        ActionWhenDead = actionWhenDead;
+        if (logMessageGenerator != null) LogMessageGenerator = logMessageGenerator;
+        
+        _processDeadCheckCooldown.ActionWhenReady += CheckProcessIsDead;
+        return this;
     }
 
     public override void _Process(double delta)
     {
-        ProcessDeadCheckCooldown.Update(delta);
+        _processDeadCheckCooldown.Update(delta);
     }
 
     public void CheckProcessIsDead()

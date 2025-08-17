@@ -18,10 +18,10 @@ public partial class ProcessShutdowner : Node
     public int? ProcessPid { get; set; }
     public Func<int, string> LogMessageGenerator { get; set; } = pid => $"Kill process {pid}.";
 
-    public ProcessShutdowner Init(int processPid, Func<int, string> logMessageGenerator)
+    public ProcessShutdowner Init(int processPid, Func<int, string> logMessageGenerator = null)
     {
         ProcessPid = processPid;
-        LogMessageGenerator = logMessageGenerator;
+        if (logMessageGenerator != null) LogMessageGenerator = logMessageGenerator;
         return this;
     }
     
