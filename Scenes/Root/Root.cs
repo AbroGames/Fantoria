@@ -22,21 +22,15 @@ public partial class Root : Node2D
         }).CallDeferred();
     }
 
-    public void Init()
+    private void Init()
     {
         _rootStarterManager = new RootStarterManager(this);
         _rootStarterManager.Init();
         NotNullChecker.CheckProperties(this); // We call NotNullChecker here, because it has not been created earlier
     }
 
-    public void Start()
+    private void Start()
     {
         _rootStarterManager.Start();
-    }
-
-    public void Shutdown()
-    {
-        GetTree().Root.PropagateNotification((int) NotificationWMCloseRequest); // Notify all nodes about game closing
-        GetTree().Quit();
     }
 }
