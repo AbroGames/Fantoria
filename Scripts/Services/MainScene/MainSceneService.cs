@@ -55,7 +55,7 @@ public class MainSceneService
         
         string adminNickname = ""; //TODO current user nickname
         
-        if (createDedicatedServerProcess.GetValueOrDefault(false))
+        if (createDedicatedServerProcess ?? false)
         {
             game.Init(new HostDedicatedServerAndConnectGameStarter(port, adminNickname, true));
         }
@@ -99,5 +99,11 @@ public class MainSceneService
     public bool MainSceneIsGame()
     {
         return _mainSceneContainer.GetCurrentStoredNode<Node>() is Game;
+    }
+    
+    public void Shutdown()
+    {
+        _mainSceneContainer.GetTree().Root.PropagateNotification((int) Node.NotificationWMCloseRequest); // Notify all nodes about game closing
+        _mainSceneContainer.GetTree().Quit();
     }
 }

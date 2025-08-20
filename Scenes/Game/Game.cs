@@ -1,17 +1,30 @@
-﻿using Fantoria.Scenes.Game.Starters;
+﻿using Fantoria.Scenes.Game.Net;
+using Fantoria.Scenes.Game.Starters;
 using Godot;
 
 namespace Fantoria.Scenes.Game;
 
 public partial class Game : Node2D
 {
-    
-    public Network Network { get; private set; } //TODO readonly?
 
-    public Game Init(BaseGameStarter gameStarter)
+    public Network Network { get; private set; }
+
+    public void Init(BaseGameStarter gameStarter)
     {
+        Network = new Network(GetMultiplayer());
+        
         gameStarter.Init(this);
-        return this;
+    }
+    
+    public override void _Notification(int id)
+    {
+        if (id == NotificationWMCloseRequest) Shutdown();
+    }
+
+    private void Shutdown()
+    {
+        Network.Shutdown();
+        //TODO gracefully отключение, сохранение игры/настроек в файлы и т.д.  
     }
 }
         
@@ -21,6 +34,7 @@ public partial class Game : Node2D
 //TODO Потребуются GameState и машина состояний? Как в Neon, но полноценная? Или разделить типа на бек и фронт, и все валидировать на "беке"?
 //TODO Возможность загрузки игры из файла сейва из какого-то состояния? По сути это один-в-один логика как синк с сервером.
 //TODO PingService / PingNode стырить из Neon сюда в Lib, без сетевой логики, чисто как аналитика и record пакета
+//TODO в Godot.ENetPacketPeer.PeerStatistic уже есть стата, разобраться с ней
         
 //TODO В каждой ноде один раз получать в _Ready текущий Game через сервис? Или через родителей? А все остальные GameServices вложены в Game?
 
@@ -28,3 +42,10 @@ public partial class Game : Node2D
 
 //TODO в Game в завершение работы (по аналогии с ProcessChecker), сделать Multiplayer.MultiplayerPeer = null; Иначе MultiplayerPeer останется висеть у рута. Так же занулять MultiplayerPeer при Connection fail
 //TODO Затестить что будет, если вызвать RPC на который у тебя нет прав. Или если самому выдать себе права на какой-то вызов RPC. Будет ли он отослан остальным клиентам или заблочиться на сервере? 
+
+//TODO Разделить жёстко папки World и Hud, управление и все всплывашки только в Hud. World одинаково выполняется и на клиенте и на сервере, полностью синхронизирован (и нет проблем с именами объектов).
+//TODO Тут чисто игровые механики, бизнес-логика.
+//TODO Там у объектов есть статические Action, типа TakeDamage(enemy, damage). На них может подписаться HudService и рендерить. МБ создать классы EnemyHud/Enemy graphics/Enemy client для обработки таких ивентов.
+//TODO А что если на такие события подписывать ещё и NetworkService? А в World никаких RPC вызовов не делать. 
+//TODO Но тогда мы либо лишаемся RPC, либо оставляем аннотации RPC в нодах, но вызываем их со стороны (из сетевого сервиса). Хз, надо подумать.
+//TODO Но ведь тогда мы выносим часть логики и нарушаем ООП.
