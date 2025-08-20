@@ -9,5 +9,7 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
     {
         base.Init(game);
         Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Connecting);
+        
+        game.Network.ConnectToServer(host ?? DefaultHost, port ?? DefaultPort);
     }
 }

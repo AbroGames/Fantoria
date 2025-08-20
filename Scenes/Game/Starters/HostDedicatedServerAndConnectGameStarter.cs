@@ -9,12 +9,13 @@ public class HostDedicatedServerAndConnectGameStarter(int? port = null, string a
     public override void Init(Game game)
     {
         int dedicatedServerPid = Service.Process.StartNewDedicatedServerApplication(
-            _port.GetValueOrDefault(DefaultPort), 
+            _port ?? DefaultPort, 
             adminNickname, 
-            showGui.GetValueOrDefault(true));
+            showGui ?? true);
         
-        ProcessShutdowner dedicatedServerShutdowner = new ProcessShutdowner() 
-            .Init(dedicatedServerPid, pid => $"Kill server process: {pid}."); 
+        ProcessShutdowner dedicatedServerShutdowner = new ProcessShutdowner().Init(
+            dedicatedServerPid,
+            pid => $"Kill server process: {pid}."); 
         game.AddChild(dedicatedServerShutdowner); 
         
         base.Init(game); // Try to connect to new hosted server
