@@ -16,7 +16,7 @@ public static class NodeNetworkExtensions
         return node.GetTree().GetMultiplayer().IsServer();
     }
 
-    public static void DoClient(this Godot.Node node, Action clientAction)
+    public static void DoClient(this Node node, Action clientAction)
     {
         if (IsClient(node))
         {

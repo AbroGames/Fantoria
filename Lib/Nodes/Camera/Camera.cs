@@ -37,11 +37,10 @@ public partial class Camera : Camera2D
 		}
 	}
 
-	public Camera Init(StringName keyZoomUp, StringName keyZoomDown)
+	public Camera(StringName keyZoomUp, StringName keyZoomDown)
 	{
 		_keyZoomUp = keyZoomUp;
 		_keyZoomDown = keyZoomDown;
-		return this;
 	}
 
 	public override void _Ready()
