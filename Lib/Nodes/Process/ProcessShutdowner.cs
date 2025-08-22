@@ -6,7 +6,7 @@ namespace Fantoria.Lib.Nodes.Process;
 
 public partial class ProcessShutdowner : Node
 {
-    private static long[] _processShutdownNotificationTypes =
+    private static readonly long[] ProcessShutdownNotificationTypes =
     [
         NotificationWMCloseRequest, 
         NotificationCrash, 
@@ -14,20 +14,19 @@ public partial class ProcessShutdowner : Node
         NotificationPredelete,
         NotificationExitTree
     ];
-    
-    public int? ProcessPid { get; set; }
-    public Func<int, string> LogMessageGenerator { get; set; } = pid => $"Kill process {pid}.";
 
-    public ProcessShutdowner Init(int processPid, Func<int, string> logMessageGenerator = null)
+    private readonly int _processPid;
+    private readonly Func<int, string> _logMessageGenerator = pid => $"Kill process {pid}.";
+    
+    public ProcessShutdowner(int processPid, Func<int, string> logMessageGenerator = null)
     {
-        ProcessPid = processPid;
-        if (logMessageGenerator != null) LogMessageGenerator = logMessageGenerator;
-        return this;
+        _processPid = processPid;
+        if (logMessageGenerator != null) _logMessageGenerator = logMessageGenerator;
     }
     
     public override void _Notification(int id)
     {
-        if (ProcessPid.HasValue && _processShutdownNotificationTypes.Contains(id) && OS.IsProcessRunning(ProcessPid.Value))
+        if (ProcessShutdownNotificationTypes.Contains(id) && OS.IsProcessRunning(_processPid))
         {
             Shutdown();
         }
@@ -35,7 +34,7 @@ public partial class ProcessShutdowner : Node
 
     public void Shutdown()
     {
-        Log.Info(LogMessageGenerator(ProcessPid.Value));
-        OS.Kill(ProcessPid.Value);
+        Log.Info(_logMessageGenerator(_processPid));
+        OS.Kill(_processPid);
     }
 }

@@ -13,7 +13,7 @@ public class HostDedicatedServerAndConnectGameStarter(int? port = null, string a
             adminNickname, 
             showGui ?? true);
         
-        ProcessShutdowner dedicatedServerShutdowner = new ProcessShutdowner().Init(
+        ProcessShutdowner dedicatedServerShutdowner = new ProcessShutdowner(
             dedicatedServerPid,
             pid => $"Kill server process: {pid}."); 
         game.AddChild(dedicatedServerShutdowner); 
