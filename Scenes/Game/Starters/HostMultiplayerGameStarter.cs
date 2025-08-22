@@ -13,7 +13,7 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
 
         if (parentPid.HasValue)
         {
-            ProcessDeadChecker clientDeadChecker = new ProcessDeadChecker().Init(
+            ProcessDeadChecker clientDeadChecker = new ProcessDeadChecker(
                 parentPid.Value, 
                 () => Service.MainScene.Shutdown(),
                 pid => $"Parent process {pid} is dead. Shutdown server.");

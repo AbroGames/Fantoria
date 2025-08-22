@@ -7,21 +7,19 @@ namespace Fantoria.Lib.Nodes.Process;
 
 public partial class ProcessDeadChecker : Node
 {
+    private readonly int? _processPid;
+    private readonly Func<int, string> _logMessageGenerator = pid => $"Process {pid} is dead.";
+    private readonly Action _actionWhenDead;
     
-    public int? ProcessPid { get; set; }
-    public Func<int, string> LogMessageGenerator { get; set; } = pid => $"Process {pid} is dead.";
-    public Action ActionWhenDead { get; set; }
+    private readonly AutoCooldown _processDeadCheckCooldown = new(5);
     
-    private AutoCooldown _processDeadCheckCooldown = new(5);
-    
-    public ProcessDeadChecker Init(int processPid, Action actionWhenDead, Func<int, string> logMessageGenerator = null)
+    public ProcessDeadChecker(int processPid, Action actionWhenDead, Func<int, string> logMessageGenerator = null)
     {
-        ProcessPid = processPid;
-        ActionWhenDead = actionWhenDead;
-        if (logMessageGenerator != null) LogMessageGenerator = logMessageGenerator;
+        _processPid = processPid;
+        _actionWhenDead = actionWhenDead;
+        if (logMessageGenerator != null) _logMessageGenerator = logMessageGenerator;
         
         _processDeadCheckCooldown.ActionWhenReady += CheckProcessIsDead;
-        return this;
     }
 
     public override void _Process(double delta)
@@ -29,12 +27,12 @@ public partial class ProcessDeadChecker : Node
         _processDeadCheckCooldown.Update(delta);
     }
 
-    public void CheckProcessIsDead()
+    private void CheckProcessIsDead()
     {
-        if (ProcessPid.HasValue && !System.Diagnostics.Process.GetProcesses().Any(x => x.Id == ProcessPid.Value))
+        if (_processPid.HasValue && !System.Diagnostics.Process.GetProcesses().Any(x => x.Id == _processPid.Value))
         {
-            Log.Info(LogMessageGenerator(ProcessPid.Value));
-            ActionWhenDead?.Invoke();
+            Log.Info(_logMessageGenerator(_processPid.Value));
+            _actionWhenDead?.Invoke();
         }
     }
 }
