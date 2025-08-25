@@ -103,7 +103,7 @@ public class MainSceneService
     
     public void Shutdown()
     {
-        _mainSceneContainer.GetTree().Root.PropagateNotification((int) Node.NotificationWMCloseRequest); // Notify all nodes about game closing
+        _mainSceneContainer.GetTree().Root.PropagateNotification((int) Node.NotificationExitTree); // Notify all nodes about game closing
         _mainSceneContainer.GetTree().Quit();
     }
 }

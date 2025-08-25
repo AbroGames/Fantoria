@@ -11,19 +11,19 @@ public partial class Game : Node2D
 
     public void Init(BaseGameStarter gameStarter)
     {
-        Network = new Network(GetMultiplayer());
+        Network = new Network();
+        AddChild(Network);
         
         gameStarter.Init(this);
     }
     
     public override void _Notification(int id)
     {
-        if (id == NotificationWMCloseRequest) Shutdown();
+        if (id == NotificationExitTree) Shutdown();
     }
 
     private void Shutdown()
     {
-        Network.Shutdown();
         //TODO gracefully отключение, сохранение игры/настроек в файлы и т.д.  
     }
 }
