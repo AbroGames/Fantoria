@@ -2,15 +2,15 @@
 
 namespace Fantoria.Scenes.Game.Net;
 
-public class Network
+public partial class Network : Node
 {
     
-    public MultiplayerApi Api { get; }
+    public MultiplayerApi Api { get; private set; }
     public NetworkStateMachine StateMachine { get; } = new();
-    
-    public Network(MultiplayerApi api)
+
+    public override void _Ready()
     {
-        Api = api;
+        Api = GetMultiplayer();
         Api.ConnectedToServer += ConnectedToServerEvent;
         Api.PeerConnected += PeerConnectedEvent;
         Api.ConnectionFailed += ConnectionFailedEvent;
@@ -82,9 +82,20 @@ public class Network
         return error;
     }
     
-    public void Shutdown()
+    public override void _Notification(int id)
     {
-        //TODO gracefully отключение
+        if (id == NotificationExitTree) Shutdown();
+    }
+    
+    private void Shutdown()
+    {
+        if (Api.HasMultiplayerPeer())
+        {
+            this.DoServer(() => {} /*TODO RPC вызов, чтобы уведомить клиентов о выключении*/);
+            Log.Warning("Net shutdown"); //TODO fix message
+            Api.MultiplayerPeer.Close();
+            Api.MultiplayerPeer = null;
+        }
     }
 
     private void ConnectedToServerEvent()
