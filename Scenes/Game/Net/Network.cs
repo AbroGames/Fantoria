@@ -91,10 +91,17 @@ public partial class Network : Node
     {
         if (Api.HasMultiplayerPeer())
         {
-            this.DoServer(() => {} /*TODO RPC вызов, чтобы уведомить клиентов о выключении*/);
-            Log.Warning("Net shutdown"); //TODO fix message
-            Api.MultiplayerPeer.Close();
+            Log.Info("Shutting down network...");
+            
+            Api.MultiplayerPeer.RefuseNewConnections = true;
+            foreach (var peer in Api.GetPeers())
+            {
+                Api.MultiplayerPeer.DisconnectPeer(peer);
+            }
             Api.MultiplayerPeer = null;
+            StateMachine.SetState(NetworkStateMachine.State.NotInitialized);
+            
+            Log.Info("Network shutdown successful");
         }
     }
 
@@ -108,12 +115,16 @@ public partial class Network : Node
     {
         StateMachine.SetState(NetworkStateMachine.State.Disconnected);
         Log.Error("Connection to the server failed");
+        
+        Shutdown();
     }
 
     private void ServerDisconnectedEvent()
     {
         StateMachine.SetState(NetworkStateMachine.State.Disconnected);
         Log.Info("Server disconnected");
+        
+        Shutdown();
     }
     
     private void PeerConnectedEvent(long id)
