@@ -13,11 +13,13 @@ public class MainSceneService
 {
     
     private NodeContainer _mainSceneContainer;
+    private PackedScene _gamePackedScene;
     private PackedScene _mainMenuPackedScene;
 
-    public void Init(NodeContainer mainSceneContainer, PackedScene mainMenuPackedScene)
+    public void Init(NodeContainer mainSceneContainer, PackedScene gamePackedScene, PackedScene mainMenuPackedScene)
     {
         _mainSceneContainer = mainSceneContainer;
+        _gamePackedScene = gamePackedScene;
         _mainMenuPackedScene = mainMenuPackedScene;
     }
     
@@ -29,7 +31,8 @@ public class MainSceneService
     
     public void StartSingleplayerGame()
     {
-        Game game = new Game();
+        Game game = _gamePackedScene.Instantiate<Game>();
+        game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
         
         game.Init(new SingleplayerGameStarter());
@@ -37,7 +40,8 @@ public class MainSceneService
     
     public void ConnectToMultiplayerGame(string host = null, int? port = null)
     {
-        Game game = new Game();
+        Game game = _gamePackedScene.Instantiate<Game>();
+        game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
         
         game.Init(new ConnectToMultiplayerGameStarter(host, port));
@@ -50,10 +54,11 @@ public class MainSceneService
     /// <param name="createDedicatedServerProcess">If true, create a new OS process running a dedicated server, and have this process connect to it as a client.</param>
     public void HostMultiplayerGameAsClient(int? port = null, bool? createDedicatedServerProcess = null)
     {
-        Game game = new Game();
+        Game game = _gamePackedScene.Instantiate<Game>();
+        game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
         
-        string adminNickname = ""; //TODO current user nickname
+        string adminNickname = ""; //TODO current user nickname. Сделать по аналогии с ником/цветом для синхронайзера
         
         if (createDedicatedServerProcess ?? false)
         {
@@ -73,7 +78,8 @@ public class MainSceneService
     /// <param name="parentPid">If this process is a dedicated server created from a client, use the PID of the client process.</param>
     public void HostMultiplayerGameAsDedicatedServer(int? port = null, string adminNickname = null, int? parentPid = null)
     {
-        Game game = new Game();
+        Game game = _gamePackedScene.Instantiate<Game>();
+        game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
         
         game.Init(new HostMultiplayerGameStarter(port, adminNickname, parentPid));

@@ -16,7 +16,7 @@ public abstract class BaseRootStarter
         
         root.PackedScenes.Init();
         Service.LoadingScreen.Init(root.LoadingScreenContainer, root.PackedScenes.LoadingScreen);
-        Service.MainScene.Init(root.MainSceneContainer, root.PackedScenes.MainMenu);
+        Service.MainScene.Init(root.MainSceneContainer, root.PackedScenes.Game, root.PackedScenes.MainMenu);
     }
 
     public virtual void Start(Root root)
