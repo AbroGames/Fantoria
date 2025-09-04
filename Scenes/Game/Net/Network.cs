@@ -108,7 +108,7 @@ public partial class Network : Node
     private void ConnectedToServerEvent()
     {
         StateMachine.SetState(NetworkStateMachine.State.Connected);
-        Log.Info("Connected to the server successfully");
+        Log.Info($"Connected to the server successfully. My peer id: {Api.GetUniqueId()}");
     }
 
     private void ConnectionFailedEvent()

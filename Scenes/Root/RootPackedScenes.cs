@@ -5,6 +5,7 @@ namespace Fantoria.Scenes.Root;
 public partial class RootPackedScenes : Node
 {
     
+    [Export] [NotNull] public PackedScene Game { get; set; }
     [Export] [NotNull] public PackedScene MainMenu { get; set; }
     [Export] [NotNull] public PackedScene LoadingScreen { get; set; }
 
