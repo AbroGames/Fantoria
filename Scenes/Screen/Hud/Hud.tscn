@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dnb3y8rbdon8t"]
+
+[ext_resource type="Script" uid="uid://bpu3rci74u6fm" path="res://Scenes/Screen/Hud/Hud.cs" id="1_63bhl"]
+
+[node name="Hud" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_63bhl")
