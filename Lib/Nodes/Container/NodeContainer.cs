@@ -3,8 +3,10 @@ using Godot;
 
 namespace Fantoria.Lib.Nodes.Container;
 
-// This script must be added to node in Godot editor
-// This script can be added to node with any type, not only type "Node"
+/// <summary>
+/// This script must be added to node in Godot editor
+/// This script can be added to node with any type, not only type "Node"
+/// </summary>
 public partial class NodeContainer : Node
 {
     private Node _currentStoredNode;

@@ -20,6 +20,15 @@ public static class NodeTreeExtensions
     }
     
     /// <summary>
+    /// Rename the child node and add it to current node.
+    /// </summary>
+    public static void AddChildWithName(this Node node, Node child, string name)
+    {
+        child.SetName(name);
+        node.AddChild(child);
+    }
+    
+    /// <summary>
     /// Extension method that reparents the given node to a new parent node.
     /// If the current parent node is valid, the node is reparented to the new parent node using Reparent().
     /// If the current parent node is invalid but the new parent node is valid, the node is added as a child to the new parent.

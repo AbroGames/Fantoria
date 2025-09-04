@@ -3,6 +3,7 @@ using Fantoria.Lib.Services.Exceptions;
 using Fantoria.Lib.Services.Logging;
 using Fantoria.Lib.Services.Maths;
 using Fantoria.Lib.Services.NotNullChecking;
+using Fantoria.Lib.Services.String;
 
 namespace Fantoria.Lib.Services;
 
@@ -13,6 +14,7 @@ public static class LibService
     public static LogService Log => ServiceLocator.Get<LogService>();
     public static NotNullCheckerService NotNullChecker => ServiceLocator.Get<NotNullCheckerService>();
     public static RandomService Rand => ServiceLocator.Get<RandomService>();
+    public static StringCompressService StringCompress => ServiceLocator.Get<StringCompressService>();
     
     public static class Global
     {
