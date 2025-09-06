@@ -1,5 +1,7 @@
 ﻿using Fantoria.Lib.Nodes.Process;
+using Fantoria.Scenes.Game.Net;
 using Fantoria.Scripts.Content.LoadingScreen;
+using Godot;
 
 namespace Fantoria.Scenes.Game.Starters;
 
@@ -20,8 +22,24 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             game.AddChild(clientDeadChecker);
         }
         
-        game.Network.HostServer(port ?? DefaultPort);
+        Network network = game.AddNetwork();
+        game.AddSynchronizer();
+        game.AddWorld();
+        game.DoClient(() => game.AddHud());
         
-        //TODO дальше два варианта ветвления: отдельный стартер для DedicatedServer, или if (isClient()). По идее далее будет использоваться только второй вариант.
+        Error error = network.HostServer(port ?? DefaultPort);
+        if (error != Error.Ok)
+        {
+            HostFailedEvent();
+            return;
+        }
+        Service.LoadingScreen.Clear();
+    }
+    
+    private void HostFailedEvent()
+    {
+        Service.MainScene.StartMainMenu();
+        //TODO Show error in menu, if IsClient(). Log always have error.
+        Service.LoadingScreen.Clear();
     }
 }
