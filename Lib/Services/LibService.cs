@@ -13,6 +13,7 @@ public static class LibService
     public static LogService Log => ServiceLocator.Get<LogService>();
     public static NotNullCheckerService NotNullChecker => ServiceLocator.Get<NotNullCheckerService>();
     public static RandomService Rand => ServiceLocator.Get<RandomService>();
+    public static Math Math => ServiceLocator.Get<Math>();
     public static StringCompressService StringCompress => ServiceLocator.Get<StringCompressService>();
     
     public static class Global

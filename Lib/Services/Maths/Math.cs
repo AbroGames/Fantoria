@@ -3,6 +3,7 @@ using Godot;
 
 namespace Fantoria.Lib.Services.Maths;
 
+[Service]
 public class Math
 {
     
