@@ -3,15 +3,8 @@ using Godot;
 
 namespace Fantoria.Scenes.Game;
 
-public partial class Synchronizer : Node
+public partial class Synchronizer(Game game) : Node
 {
-    
-    private Game _game;
-
-    public override void _Ready()
-    {
-        _game = GetParent<Game>();
-    }
 
     public void ConnectedToServerEvent()
     {
@@ -33,8 +26,8 @@ public partial class Synchronizer : Node
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncWorldDataOnClientRpc()
     {
-        _game.AddWorld();
-        _game.AddHud();
+        game.AddWorld();
+        game.AddHud();
         //TODO Receive world state as gzip json byte array from server SaveLoad system, and load it into client SaveLoad system
         Service.LoadingScreen.Clear();
     }

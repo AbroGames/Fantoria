@@ -33,7 +33,7 @@ public partial class Game : Node2D
     
     public Hud AddHud()
     {
-        Hud hud = PackedScenes.World.Instantiate<Hud>();
+        Hud hud = PackedScenes.Hud.Instantiate<Hud>();
         hud.Init(WorldContainer.GetCurrentStoredNode<World.World>());
         HudContainer.ChangeStoredNode(hud);
         return hud;
@@ -48,7 +48,7 @@ public partial class Game : Node2D
 
     public Synchronizer AddSynchronizer()
     {
-        Synchronizer synchronizer = new Synchronizer();
+        Synchronizer synchronizer = new Synchronizer(this);
         this.AddChildWithName(synchronizer, "Synchronizer");
         return synchronizer;
     }

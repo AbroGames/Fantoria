@@ -18,7 +18,7 @@ public class ClientRootStarter : BaseRootStarter
 	    base.Start(root);
         Log.Info("Starting Client...");
         
-        if (Service.CmdArgs.Client.AutoConnect) //TODO в доку новую инфу про то, что достаточно AutoConnect флага
+        if (Service.CmdArgs.Client.AutoConnect)
         {
 	        Service.MainScene.ConnectToMultiplayerGame(Service.CmdArgs.Client.AutoConnectIp, Service.CmdArgs.Client.AutoConnectPort);
         }
