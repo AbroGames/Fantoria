@@ -1,5 +1,4 @@
-﻿using Fantoria.Scenes.Screen.Hud;
-using Fantoria.Scripts.Content.LoadingScreen;
+﻿using Fantoria.Scripts.Content.LoadingScreen;
 
 namespace Fantoria.Scenes.Game.Starters;
 

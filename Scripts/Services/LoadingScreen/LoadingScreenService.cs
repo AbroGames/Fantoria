@@ -1,7 +1,7 @@
 ﻿using Fantoria.Lib.Nodes.Container;
 using Fantoria.Scripts.Content.LoadingScreen;
-using LoadingScreenNode = Fantoria.Scenes.Screen.LoadingScreen.LoadingScreen;
 using Godot;
+using LoadingScreenNode = Fantoria.Scenes.Screen.LoadingScreen.LoadingScreen;
 
 namespace Fantoria.Scripts.Services.LoadingScreen;
 

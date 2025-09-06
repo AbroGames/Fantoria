@@ -1,4 +1,3 @@
-using Fantoria.Scenes.Game.Starters;
 using Godot;
 
 namespace Fantoria.Scenes.Screen.MainMenu.Pages.Main;

@@ -1,7 +1,4 @@
-﻿using Fantoria.Scenes.Game.Net;
-using Fantoria.Scripts.Content.LoadingScreen;
-
-namespace Fantoria.Scenes.Game.Starters;
+﻿namespace Fantoria.Scenes.Game.Starters;
 
 public abstract class BaseGameStarter
 {

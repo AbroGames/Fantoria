@@ -1,7 +1,4 @@
-﻿using System;
-using Fantoria.Scenes.Game;
-
-namespace Fantoria.Scenes.Root.Starters;
+﻿namespace Fantoria.Scenes.Root.Starters;
 
 public class DedicatedServerRootStarter : BaseRootStarter
 {
