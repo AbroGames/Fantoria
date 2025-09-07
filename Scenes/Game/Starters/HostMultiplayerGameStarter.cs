@@ -23,23 +23,26 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
         }
         
         Network network = game.AddNetwork();
-        game.AddSynchronizer();
-        game.AddWorld();
+        Synchronizer synchronizer = game.AddSynchronizer();
+        World.World world = game.AddWorld();
         game.DoClient(() => game.AddHud());
         
         Error error = network.HostServer(port ?? DefaultPort);
         if (error != Error.Ok)
         {
-            HostFailedEvent();
+            game.DoClient(HostFailedEventOnClient);
             return;
         }
-        Service.LoadingScreen.Clear();
+
+        world.InitOnServer();
+        game.DoClient(synchronizer.StartSyncOnClient);
+        Service.LoadingScreen.Clear(); //TODO Remove it or use only for dedicated server test (in server+client mode we clear screen in synchronizer) 
     }
     
-    private void HostFailedEvent()
+    private void HostFailedEventOnClient()
     {
         Service.MainScene.StartMainMenu();
-        //TODO Show error in menu, if IsClient(). Log always have error.
+        //TODO Show error in menu (it is client). Log already has error.
         Service.LoadingScreen.Clear();
     }
 }
