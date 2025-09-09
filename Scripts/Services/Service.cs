@@ -14,6 +14,6 @@ public static class Service
 
     public static class Global
     {
-        
+        public const int ServerId = 1; //TODO Move to another global place
     }
 }

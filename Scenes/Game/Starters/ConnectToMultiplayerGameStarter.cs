@@ -14,8 +14,10 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         
         Network network = game.AddNetwork();
         Synchronizer synchronizer = game.AddSynchronizer();
+        game.AddWorld();
+        game.AddHud();
         
-        game.GetMultiplayer().ConnectedToServer += synchronizer.ConnectedToServerEvent;
+        game.GetMultiplayer().ConnectedToServer += synchronizer.StartSyncOnClient;
         game.GetMultiplayer().ConnectionFailed += ConnectionFailedEvent;
         
         Error error = network.ConnectToServer(host ?? DefaultHost, port ?? DefaultPort);
@@ -29,7 +31,7 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
     private void ConnectionFailedEvent()
     {
         Service.MainScene.StartMainMenu();
-        //TODO Show error in menu, if IsClient(). Log always have error.
+        //TODO Show error in menu (it is client). Log already has error.
         Service.LoadingScreen.Clear();
     }
 }
