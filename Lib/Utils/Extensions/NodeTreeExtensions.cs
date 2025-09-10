@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Godot;
 using Godot.Collections;
 
@@ -8,6 +10,8 @@ namespace Fantoria.Lib.Utils.Extensions;
 
 public static class NodeTreeExtensions
 {
+    
+    private static long _nodeCounter;
     
     /// <summary>
     /// Shortcut for GodotObject.IsInstanceValid(object)
@@ -26,6 +30,26 @@ public static class NodeTreeExtensions
     {
         child.SetName(name);
         node.AddChild(child);
+    }
+    
+    /// <summary>
+    /// Rename the child node to unique name with prefix and add it to current node.
+    /// </summary>
+    public static void AddChildWithUniqueName(this Node node, Node child, string prefix, bool dashAfterPrefix = true)
+    {
+        AddChildWithName(node, child, prefix + 
+                                      (dashAfterPrefix ? "-" : "") + 
+                                      node.GetMultiplayer().GetUniqueId() + 
+                                      "-" + 
+                                      _nodeCounter++);
+    }
+    
+    /// <summary>
+    /// Rename the child node to unique name and add it to current node.
+    /// </summary>
+    public static void AddChildWithUniqueName(this Node node, Node child)
+    {
+        AddChildWithUniqueName(node, child, "", false);
     }
     
     /// <summary>
@@ -160,5 +184,39 @@ public static class NodeTreeExtensions
                 callback?.Invoke();
             }
         }).CallDeferred();
+    }
+
+    /// <summary>
+    /// Get full path for all children of this node
+    /// </summary>
+    public static string GetFullTree(this Node node)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine(); 
+        sb.Append(node.GetPath());
+        foreach (var child in node.GetChildren()) 
+        {
+            sb.Append(child.GetFullTree());
+        }
+        return sb.ToString();
+    }
+    
+    /// <summary>
+    /// Get hash of all children of this node
+    /// Can be used for compare Client/Server trees in debug
+    /// </summary>
+    public static string GetTreeHash(this Node node)
+    {
+        string inputString = node.GetFullTree();
+        byte[] inputBytes = Encoding.UTF8.GetBytes(inputString);
+        byte[] hashBytes = MD5.HashData(inputBytes);
+
+        StringBuilder sb = new StringBuilder();
+        foreach (byte b in hashBytes)
+        {
+            sb.Append(b.ToString("x2"));
+        }
+
+        return sb.ToString();
     }
 }
