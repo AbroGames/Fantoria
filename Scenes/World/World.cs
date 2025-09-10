@@ -1,6 +1,12 @@
-﻿using Fantoria.Scenes.World.Entity.Building;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Fantoria.Scenes.World.Data.PlayersData;
+using Fantoria.Scenes.World.Entity.Building;
+using Fantoria.Scenes.World.StartStop;
+using Fantoria.Scenes.World.Surface.Battle;
 using Fantoria.Scenes.World.Surface.Map;
 using Godot;
+using Godot.Collections;
 
 namespace Fantoria.Scenes.World;
 
@@ -12,41 +18,84 @@ public partial class World : Node2D
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; set; }
     [Export] [NotNull] public PackedScene WorldMultiplayerSpawnerPackedScene { get; private set; }
 
-    //TODO PlayerInfo, Map, List<Battles>
+    [Export] public string SaveFilePath; // World will be to save to this file on server
+
+    //TODO Может быть заменить ручную настройку ноды синхронизатора, на автоматическую, через пометку аннотацией типа [Sync]? Sync может быть наследником [Export], тогда, возможно, хватит только Sync.
+    //TODO Возможно ли вообще избавиться от этого "Досинкхронизирования" через переменные? Все равно же должен быть какой-то ивент, чтобы Hud и т.п. узнали об изменение свойства. В World ивенты, которые подписаны на MpSpawn.Spawned ?
+    private MapSurface MapSurface => GetNodeOrNull<MapSurface>(_mapSurfaceName);
+    [Export] private string _mapSurfaceName;
+    
+    private List<BattleSurface> BattleSurfaces => _battleSurfacesNames.Select(name => GetNode<BattleSurface>(name)).ToList();
+    [Export] private Array<string> _battleSurfacesNames = new();
+    
+    private PlayersData PlayersData => GetNodeOrNull<PlayersData>(_playersDataName);
+    [Export] private string _playersDataName;
     
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
     }
 
-    public void InitOnServer()
+    public MapSurface AddMapSurface()
     {
-        MapSurface surface = PackedScenes.MapSurface.Instantiate<MapSurface>();
-        this.AddChildWithName(surface, "Surface");
-        
-        WorldMultiplayerSpawner worldMultiplayerSpawner = WorldMultiplayerSpawnerPackedScene.Instantiate<WorldMultiplayerSpawner>()
-            .Init(surface);
-        this.AddChildWithName(worldMultiplayerSpawner, "MultiplayerSpawner");
+        MapSurface?.QueueFree();
+        MapSurface mapSurface = PackedScenes.MapSurface.Instantiate<MapSurface>();
+        this.AddChildWithUniqueName(mapSurface, "MapSurface");
+        _mapSurfaceName = mapSurface.Name;
+        AddSpawnerToNode(mapSurface);
+        return mapSurface;
     }
     
-    //TODO Метод для создания Surface + Spawner
+    public BattleSurface AddBattleSurface()
+    {
+        BattleSurface battleSurface = PackedScenes.BattleSurface.Instantiate<BattleSurface>();
+        this.AddChildWithUniqueName(battleSurface, "BattleSurface");
+        _battleSurfacesNames.Add(battleSurface.Name);
+        AddSpawnerToNode(battleSurface);
+        return battleSurface;
+    }
+
+    public PlayersData AddPlayersData()
+    {
+        PlayersData?.QueueFree();
+        PlayersData playersData = PackedScenes.PlayersData.Instantiate<PlayersData>();
+        this.AddChildWithUniqueName(playersData, "PlayersData");
+        _playersDataName = playersData.Name;
+        AddSpawnerToNode(playersData);
+        return playersData;
+    }
+
+    private void AddSpawnerToNode(Node node)
+    {
+        WorldMultiplayerSpawner worldMultiplayerSpawner = WorldMultiplayerSpawnerPackedScene.Instantiate<WorldMultiplayerSpawner>()
+            .Init(node);
+        this.AddChildWithUniqueName(worldMultiplayerSpawner, "MultiplayerSpawner");
+        node.TreeExiting += worldMultiplayerSpawner.QueueFree;
+    }
 
     public void CreatePoint() => RpcId(ServerId, MethodName.CreatePointRpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public void CreatePointRpc()
+    private void CreatePointRpc()
     {
         Log.Warning("Create point RPC");
 
-        for (int i = 0; i < 10; i++)
+        Array<Node> nodes = GetChildren();
+        nodes.Shuffle();
+        foreach (Node node in nodes)
         {
-            MapSurface surface = PackedScenes.MapSurface.Instantiate<MapSurface>();
-            this.AddChildWithUniqueName(surface, "Surface");
-        
-            WorldMultiplayerSpawner worldMultiplayerSpawner = WorldMultiplayerSpawnerPackedScene.Instantiate<WorldMultiplayerSpawner>()
-                .Init(surface);
-            this.AddChildWithUniqueName(worldMultiplayerSpawner, "MultiplayerSpawner");
+            if (node.GetName().ToString().Contains("Surface"))
+            {
+                Log.Warning("Remove: " + node.Name);
+                node.QueueFree();
+                break;
+            }
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            MapSurface surface = AddMapSurface();
             
-            for (int j = 0; j < 10; j++)
+            for (int j = 0; j < 1; j++)
             {
                 MapPoint point = PackedScenes.MapPoint.Instantiate<MapPoint>();
                 point.Position = Vec(LibService.Rand.Range(0, 1000), LibService.Rand.Range(0, 500));
@@ -55,21 +104,17 @@ public partial class World : Node2D
         }
     }
 
-    public void LogChildren() => Rpc(MethodName.LogChildrenRpc);
+    
+    public void LogTree() => Rpc(MethodName.LogTreeRpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public void LogChildrenRpc()
+    private void LogTreeRpc()
     {
-        Log.Info(this.GetFullTree());
-        Log.Info(this.GetTreeHash());
+        Log.Debug(this.GetFullTree());
+        Log.Debug(this.GetTreeHash());
     }
-
+    
     public override void _Notification(int id)
     {
-        if (id == NotificationExitTree) Shutdown();
-    }
-
-    private void Shutdown()
-    {
-        //TODO Сохранение состояния игры в файл и т.д.  
+        if (id == NotificationExitTree && this.IsServer()) new WorldStopper(this).StopOnServer();
     }
 }

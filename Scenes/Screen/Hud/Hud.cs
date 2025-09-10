@@ -29,13 +29,12 @@ public partial class Hud : Control
         Info.Text += $"\nFrame time process: {Performance.GetMonitor(Performance.Monitor.TimeProcess)*1000:N1}ms";
         Info.Text += $"\nPhysics time process: {Performance.GetMonitor(Performance.Monitor.TimePhysicsProcess)*1000:N1}ms ({Performance.GetMonitor(Performance.Monitor.TimePhysicsProcess) * Engine.PhysicsTicksPerSecond * 100:N0} %)";
         Info.Text += $"\nNavigation time process: {Performance.GetMonitor(Performance.Monitor.TimeNavigationProcess)*1000:N1}ms";
-
     }
 
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
         Create.Pressed += () => _world.CreatePoint();
-        LogChildren.Pressed += () => _world.LogChildren();
+        LogChildren.Pressed += () => _world.LogTree();
     }
 }
