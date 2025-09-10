@@ -1,4 +1,6 @@
-﻿using Fantoria.Scripts.Content.LoadingScreen;
+﻿using Fantoria.Scenes.World;
+using Fantoria.Scenes.World.StartStop;
+using Fantoria.Scripts.Content.LoadingScreen;
 
 namespace Fantoria.Scenes.Game.Starters;
 
@@ -13,7 +15,7 @@ public class SingleplayerGameStarter : BaseGameStarter
         World.World world = game.AddWorld();
         game.AddHud();
         
-        world.InitOnServer();
+        new WorldStarter(world).StartOnServer();
         synchronizer.StartSyncOnClient();
         Service.LoadingScreen.Clear();
     }

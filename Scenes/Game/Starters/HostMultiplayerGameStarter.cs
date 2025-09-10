@@ -1,5 +1,7 @@
 ﻿using Fantoria.Lib.Nodes.Process;
 using Fantoria.Scenes.Game.Net;
+using Fantoria.Scenes.World;
+using Fantoria.Scenes.World.StartStop;
 using Fantoria.Scripts.Content.LoadingScreen;
 using Godot;
 
@@ -34,7 +36,7 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             return;
         }
 
-        world.InitOnServer();
+        new WorldStarter(world).StartOnServer();
         game.DoClient(synchronizer.StartSyncOnClient);
         Service.LoadingScreen.Clear(); //TODO Remove it or use only for dedicated server test (in server+client mode we clear screen in synchronizer) 
     }
