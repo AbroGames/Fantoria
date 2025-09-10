@@ -23,9 +23,8 @@ public class NotNullCheckerService
         Type type = obj.GetType();
         foreach (PropertyInfo property in type.GetProperties())
         {
-            bool isNull = property.GetValue(obj) == null;
-            bool hasNotNullAttribute = Attribute.IsDefined(property, typeof(NotNullAttribute));
-            if (hasNotNullAttribute && isNull)
+            if (Attribute.IsDefined(property, typeof(NotNullAttribute)) && // If it has NotNull attribute
+                property.GetValue(obj) == null) // And it is null
             {
                 Log.Critical($"Property '{property.Name}' in type '{obj.GetType()}' is null, but has NotNull attribute");
             }
