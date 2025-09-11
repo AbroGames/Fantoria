@@ -1,4 +1,6 @@
-﻿using Godot;
+﻿using Fantoria.Scenes.Game;
+using Fantoria.Scripts.Content.LoadingScreen;
+using Godot;
 
 namespace Fantoria.Scenes.Screen.Hud;
 
@@ -10,13 +12,25 @@ public partial class Hud : Control
     [Export] [NotNull] public Label Info { get; set; }
     
     private World.World _world;
+    private Synchronizer _synchronizer;
     
-    public Hud Init(World.World world)
+    public Hud Init(World.World world, Synchronizer synchronizer)
     {
         if (world == null) Log.Error("World must be not null");
         _world = world;
         
+        if (synchronizer == null) Log.Error("Synchronizer must be not null");
+        _synchronizer = synchronizer;
+
+        ConnectToEvents();
+        
         return this;
+    }
+
+    private void ConnectToEvents()
+    {
+        _synchronizer.SyncStartedOnClientEvent += () => Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
+        _synchronizer.SyncEndedOnClientEvent += () => Service.LoadingScreen.Clear();
     }
 
     public override void _Process(double delta)
@@ -34,7 +48,7 @@ public partial class Hud : Control
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
-        Create.Pressed += () => _world.CreatePoint();
+        Create.Pressed += () => _world.PlayersData.LogData();
         LogChildren.Pressed += () => _world.LogTree();
     }
 }

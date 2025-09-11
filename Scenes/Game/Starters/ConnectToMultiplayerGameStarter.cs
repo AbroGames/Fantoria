@@ -12,10 +12,10 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         base.Init(game);
         Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Connecting);
         
-        Network network = game.AddNetwork();
-        Synchronizer synchronizer = game.AddSynchronizer();
         game.AddWorld();
+        Synchronizer synchronizer = game.AddSynchronizer();
         game.AddHud();
+        Network network = game.AddNetwork();
         
         game.GetMultiplayer().ConnectedToServer += synchronizer.StartSyncOnClient;
         game.GetMultiplayer().ConnectionFailed += ConnectionFailedEvent;

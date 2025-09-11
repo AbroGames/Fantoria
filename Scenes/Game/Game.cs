@@ -41,11 +41,19 @@ public partial class Game : Node2D
         
         return world;
     }
+
+    public Synchronizer AddSynchronizer()
+    {
+        _synchronizer?.QueueFree();
+        _synchronizer = new Synchronizer(WorldContainer.GetCurrentStoredNode<World.World>());
+        this.AddChildWithName(_synchronizer, "Synchronizer");
+        return _synchronizer;
+    }
     
     public Hud AddHud()
     {
         Hud hud = PackedScenes.Hud.Instantiate<Hud>()
-            .Init(WorldContainer.GetCurrentStoredNode<World.World>());
+            .Init(WorldContainer.GetCurrentStoredNode<World.World>(), _synchronizer);
         HudContainer.ChangeStoredNode(hud);
         return hud;
     }
@@ -56,13 +64,5 @@ public partial class Game : Node2D
         _network = new Network();
         this.AddChildWithName(_network, "Network");
         return _network;
-    }
-
-    public Synchronizer AddSynchronizer()
-    {
-        _synchronizer?.QueueFree();
-        _synchronizer = new Synchronizer();
-        this.AddChildWithName(_synchronizer, "Synchronizer");
-        return _synchronizer;
     }
 }

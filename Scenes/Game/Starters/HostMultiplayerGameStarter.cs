@@ -24,10 +24,10 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             game.AddChild(clientDeadChecker);
         }
         
-        Network network = game.AddNetwork();
-        Synchronizer synchronizer = game.AddSynchronizer();
         World.World world = game.AddWorld();
+        Synchronizer synchronizer = game.AddSynchronizer();
         game.DoClient(() => game.AddHud());
+        Network network = game.AddNetwork();
         
         Error error = network.HostServer(port ?? DefaultPort);
         if (error != Error.Ok)

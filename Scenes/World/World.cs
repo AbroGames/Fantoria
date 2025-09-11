@@ -18,6 +18,8 @@ public partial class World : Node2D
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; set; }
     [Export] [NotNull] public PackedScene WorldMultiplayerSpawnerPackedScene { get; private set; }
 
+    public readonly WorldEvents Events = new();
+    
     [Export] public string SaveFilePath; // World will be to save to this file on server
 
     //TODO Может быть заменить ручную настройку ноды синхронизатора, на автоматическую, через пометку аннотацией типа [Sync]? Sync может быть наследником [Export], тогда, возможно, хватит только Sync.
@@ -28,7 +30,7 @@ public partial class World : Node2D
     private List<BattleSurface> BattleSurfaces => _battleSurfacesNames.Select(name => GetNode<BattleSurface>(name)).ToList();
     [Export] private Array<string> _battleSurfacesNames = new();
     
-    private PlayersData PlayersData => GetNodeOrNull<PlayersData>(_playersDataName);
+    public PlayersData PlayersData => GetNodeOrNull<PlayersData>(_playersDataName);
     [Export] private string _playersDataName;
     
     public override void _Ready()
@@ -77,33 +79,8 @@ public partial class World : Node2D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void CreatePointRpc()
     {
-        Log.Warning("Create point RPC");
-
-        Array<Node> nodes = GetChildren();
-        nodes.Shuffle();
-        foreach (Node node in nodes)
-        {
-            if (node.GetName().ToString().Contains("Surface"))
-            {
-                Log.Warning("Remove: " + node.Name);
-                node.QueueFree();
-                break;
-            }
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            MapSurface surface = AddMapSurface();
-            
-            for (int j = 0; j < 1; j++)
-            {
-                MapPoint point = PackedScenes.MapPoint.Instantiate<MapPoint>();
-                point.Position = Vec(LibService.Rand.Range(0, 1000), LibService.Rand.Range(0, 500));
-                surface.AddChildWithUniqueName(point, "Point");
-            }
-        }
+        Log.Warning("CreatePoint RPC called");
     }
-
     
     public void LogTree() => Rpc(MethodName.LogTreeRpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]

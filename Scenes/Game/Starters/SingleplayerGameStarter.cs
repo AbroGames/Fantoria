@@ -11,8 +11,8 @@ public class SingleplayerGameStarter : BaseGameStarter
         base.Init(game);
         Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
 
-        Synchronizer synchronizer = game.AddSynchronizer();
         World.World world = game.AddWorld();
+        Synchronizer synchronizer = game.AddSynchronizer();
         game.AddHud();
         
         new WorldStarter(world).StartOnServer();

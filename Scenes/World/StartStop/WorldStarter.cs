@@ -19,8 +19,6 @@ public class WorldStarter(World world)
     private void StartNewGameOnServer()
     {
         world.AddMapSurface();
-        world.AddBattleSurface();
-        world.AddBattleSurface();
         world.AddPlayersData();
     }
 }
