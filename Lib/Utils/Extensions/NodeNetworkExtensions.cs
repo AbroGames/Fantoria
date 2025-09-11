@@ -37,6 +37,12 @@ public static class NodeNetworkExtensions
         DoClient(node, clientAction);
         DoServer(node, serverAction);
     }
+    
+    public static void DoServerClient(this Node node, Action serverAction, Action clientAction)
+    {
+        DoServer(node, serverAction);
+        DoClient(node, clientAction);
+    }
 }
 
 // Required because NodeNetworkExtensions is included via global using, and we don't want to expose the _isClientChecker field there

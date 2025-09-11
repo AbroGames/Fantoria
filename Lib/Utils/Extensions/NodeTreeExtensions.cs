@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Godot;
@@ -218,5 +219,30 @@ public static class NodeTreeExtensions
         }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Get data from each field and property with attribute [Export]
+    /// </summary>
+    public static string GetExportMembersInfo(this Node node)
+    {
+        StringBuilder stringBuilder = new();
+        Type type = node.GetType();
+        foreach (PropertyInfo property in type.GetProperties())
+        {
+            if (!Attribute.IsDefined(property, typeof(ExportAttribute))) continue;
+            
+            stringBuilder.AppendLine();
+            stringBuilder.Append(property.Name + ": " + property.GetValue(node));
+        }
+        foreach (FieldInfo field in type.GetFields())
+        {
+            if (!Attribute.IsDefined(field, typeof(ExportAttribute))) continue;
+            
+            stringBuilder.AppendLine();
+            stringBuilder.Append(field.Name + ": " + field.GetValue(node));
+        }
+        
+        return stringBuilder.ToString();
     }
 }

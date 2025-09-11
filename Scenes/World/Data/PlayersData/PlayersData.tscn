@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6diffqi8jbvj"]
+[gd_scene load_steps=3 format=3 uid="uid://b6diffqi8jbvj"]
 
 [ext_resource type="Script" uid="uid://b3dpngblb7dxa" path="res://Scenes/World/Data/PlayersData/PlayersData.cs" id="1_jjkfi"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jjkfi"]
+properties/0/path = NodePath(".:NickByPeerId")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
 [node name="PlayersData" type="Node"]
 script = ExtResource("1_jjkfi")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_jjkfi")
