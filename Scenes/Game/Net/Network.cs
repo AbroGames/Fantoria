@@ -4,6 +4,8 @@ namespace Fantoria.Scenes.Game.Net;
 
 public partial class Network : Node
 {
+
+    public static readonly int MaxSyncPacketSize = 65535 * 1024;
     
     public MultiplayerApi Api { get; private set; }
     public NetworkStateMachine StateMachine { get; } = new();
@@ -16,6 +18,7 @@ public partial class Network : Node
         Api.ConnectionFailed += ConnectionFailedEvent;
         Api.PeerDisconnected += PeerDisconnectedEvent;
         Api.ServerDisconnected += ServerDisconnectedEvent;
+        (Api as SceneMultiplayer)?.SetMaxSyncPacketSize(MaxSyncPacketSize);
     }
 
     /// <summary>Try to connect to the server</summary>
