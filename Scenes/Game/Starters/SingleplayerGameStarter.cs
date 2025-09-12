@@ -17,6 +17,5 @@ public class SingleplayerGameStarter : BaseGameStarter
         
         new WorldStarter(world).StartOnServer();
         synchronizer.StartSyncOnClient();
-        Service.LoadingScreen.Clear();
     }
 }
