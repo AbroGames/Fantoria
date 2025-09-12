@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bpu3rci74u6fm" path="res://Scenes/Screen/Hud/Hud.cs" id="1_63bhl"]
 
-[node name="Hud" type="Control" node_paths=PackedStringArray("Create", "LogChildren", "Info")]
+[node name="Hud" type="Control" node_paths=PackedStringArray("Test1", "Test2", "Test3", "LogChildren", "Info")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,11 +10,43 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_63bhl")
-Create = NodePath("Button")
-LogChildren = NodePath("Button2")
+Test1 = NodePath("Test1")
+Test2 = NodePath("Test2")
+Test3 = NodePath("Test3")
+LogChildren = NodePath("Log")
 Info = NodePath("Label")
 
-[node name="Button" type="Button" parent="."]
+[node name="Test1" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.0
+offset_top = 153.0
+offset_right = 38.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ТЕСТ 1"
+
+[node name="Test2" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.0
+offset_top = 193.0
+offset_right = 38.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ТЕСТ 2"
+
+[node name="Test3" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -27,9 +59,9 @@ offset_right = 38.0
 offset_bottom = 263.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "СПАВН"
+text = "ТЕСТ 3"
 
-[node name="Button2" type="Button" parent="."]
+[node name="Log" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

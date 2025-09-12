@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Fantoria.Scenes.World.Data;
+using Fantoria.Scenes.World.Data.Player;
 using Fantoria.Scenes.World.StartStop;
 using Fantoria.Scenes.World.Surface.Battle;
 using Fantoria.Scenes.World.Surface.Map;
@@ -14,10 +15,10 @@ public partial class World : Node2D
     
     //TODO WorldPackedScenes переименовать в SyncPackedScenes? И отдельно сделать ClientPackedScenes, который не привязан в MpSpawner. В нем всякие эффекты (не гуи, а мировые).
     //TODO А может лучше всё-таки оставить World ПОЛНОСТЬЮ синхронным, а World-эффекты вешать в отдельный слой, по соседству с World. Принцип как у HUD.
+    [Export] [NotNull] public WorldPersistenceData Data { get; private set; }
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; private set; }
     [Export] [NotNull] public PackedScene WorldMultiplayerSpawnerPackedScene { get; private set; }
 
-    public WorldPersistenceData Data { get; private set; }
     public readonly WorldEvents Events = new();
     
     [Export] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
@@ -63,31 +64,25 @@ public partial class World : Node2D
         return worldMultiplayerSpawner;
     }
 
-    public void AddPersistenceData(byte[] serializableData = null)
-    {
-        Data?.QueueFree();
-        if (serializableData == null)
-        {
-            Data = new();
-        }
-        else
-        {
-            //TODO Data = MessagePack.Deserialize
-        }
-        this.AddChildWithName(Data, "Data");
-    }
-
-    public byte[] GetPersistenceData()
-    {
-        return null; //TODO MessagePack.Serialize
-    }
-
-    public void CreatePoint() => RpcId(ServerId, MethodName.CreatePointRpc);
-
+    public void Test1() => RpcId(ServerId, MethodName.Test1Rpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void CreatePointRpc()
+    private void Test1Rpc()
     {
-        Log.Warning("CreatePoint RPC called");
+        Log.Warning("Test 1 RPC called");
+    }
+    
+    public void Test2() => RpcId(ServerId, MethodName.Test2Rpc);
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void Test2Rpc()
+    {
+        Log.Warning("Test 2 RPC called");
+    }
+    
+    public void Test3() => RpcId(ServerId, MethodName.Test3Rpc);
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void Test3Rpc()
+    {
+        Log.Warning("Test 3 RPC called");
     }
 
     public void LogTree() => Rpc(MethodName.LogTreeRpc);

@@ -7,7 +7,9 @@ namespace Fantoria.Scenes.Screen.Hud;
 public partial class Hud : Control
 {
     
-    [Export] [NotNull] public Button Create { get; set; }
+    [Export] [NotNull] public Button Test1 { get; set; }
+    [Export] [NotNull] public Button Test2 { get; set; }
+    [Export] [NotNull] public Button Test3 { get; set; }
     [Export] [NotNull] public Button LogChildren { get; set; }
     [Export] [NotNull] public Label Info { get; set; }
     
@@ -25,6 +27,15 @@ public partial class Hud : Control
         ConnectToEvents();
         
         return this;
+    }
+
+    public override void _Ready()
+    {
+        NotNullChecker.CheckProperties(this);
+        Test1.Pressed += () => { _world.Test1(); };
+        Test2.Pressed += () => { _world.Test2(); };
+        Test3.Pressed += () => { _world.Test3(); };
+        LogChildren.Pressed += () => { _world.LogTree(); };
     }
 
     private void ConnectToEvents()
@@ -51,12 +62,5 @@ public partial class Hud : Control
         Info.Text += $"\nFrame time process: {Performance.GetMonitor(Performance.Monitor.TimeProcess)*1000:N1}ms";
         Info.Text += $"\nPhysics time process: {Performance.GetMonitor(Performance.Monitor.TimePhysicsProcess)*1000:N1}ms ({Performance.GetMonitor(Performance.Monitor.TimePhysicsProcess) * Engine.PhysicsTicksPerSecond * 100:N0} %)";
         Info.Text += $"\nNavigation time process: {Performance.GetMonitor(Performance.Monitor.TimeNavigationProcess)*1000:N1}ms";
-    }
-
-    public override void _Ready()
-    {
-        NotNullChecker.CheckProperties(this);
-        Create.Pressed += () => { _world.CreatePoint(); };
-        LogChildren.Pressed += () => { _world.LogTree(); };
     }
 }
