@@ -5,9 +5,10 @@ public class WorldStarter(World world)
 
     public void StartOnServer(string saveFilePath = null)
     {
+        world.AddPersistenceData();
         if (saveFilePath != null)
         {
-            world.SaveFilePath = saveFilePath;
+            world.Data.SaveFilePath = saveFilePath;
             new WorldSaveLoad(world).LoadFromDiskOnServer();
         }
         else
@@ -19,6 +20,5 @@ public class WorldStarter(World world)
     private void StartNewGameOnServer()
     {
         world.AddMapSurface();
-        world.AddPlayersData();
     }
 }

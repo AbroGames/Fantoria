@@ -14,9 +14,6 @@ public partial class WorldPackedScenes : Node
     
     [ExportGroup("Map")]
     [Export] [NotNull] public PackedScene MapPoint { get; private set; }
-    
-    [ExportGroup("Data")]
-    [Export] [NotNull] public PackedScene PlayersData { get; private set; }
 
     public Godot.Collections.Dictionary<string, PackedScene> SceneByName { get; private set; }
     public ICollection<PackedScene> Scenes => SceneByName.Values;

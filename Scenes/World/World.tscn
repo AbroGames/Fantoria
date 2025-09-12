@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bpjqlqsxaute2"]
+[gd_scene load_steps=6 format=3 uid="uid://bpjqlqsxaute2"]
 
 [ext_resource type="Script" uid="uid://dtpndmeabtt07" path="res://Scenes/World/World.cs" id="1_0nbjp"]
 [ext_resource type="PackedScene" uid="uid://baeir4xp6kjyd" path="res://Scenes/World/WorldMultiplayerSpawner.tscn" id="2_ouhkt"]
 [ext_resource type="PackedScene" uid="uid://ba3apeajydxl6" path="res://Scenes/World/WorldPackedScenes.tscn" id="2_xf6vi"]
+[ext_resource type="PackedScene" uid="uid://dwxafycftxpt3" path="res://Scenes/World/Data/WorldPersistenceData.tscn" id="3_5jr8x"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ouhkt"]
 properties/0/path = NodePath(".:_mapSurfaceName")
@@ -11,17 +12,17 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:_battleSurfacesNames")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:_playersDataName")
+properties/2/path = NodePath(".:PlayerNickByPeerId")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:SaveFilePath")
-properties/3/spawn = true
-properties/3/replication_mode = 2
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("PackedScenes")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("Data", "PackedScenes")]
 script = ExtResource("1_0nbjp")
+Data = NodePath("WorldData")
 PackedScenes = NodePath("PackedScenes")
 WorldMultiplayerSpawnerPackedScene = ExtResource("2_ouhkt")
+
+[node name="WorldData" parent="." instance=ExtResource("3_5jr8x")]
 
 [node name="PackedScenes" parent="." instance=ExtResource("2_xf6vi")]
 
