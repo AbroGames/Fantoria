@@ -16,12 +16,14 @@ public partial class Synchronizer : Node
     
     private World.World _world;
     
-    public Synchronizer(World.World world)
+    public Synchronizer Init(World.World world)
     {
         if (world == null) Log.Error("World must be not null");
         _world = world;
+
+        return this;
     }
-    
+
     public void StartSyncOnClient()
     {
         SyncStartedOnClientEvent.Invoke();
@@ -42,14 +44,14 @@ public partial class Synchronizer : Node
         }
         _world.PlayerNickByPeerId.Add(connectedClientId, nick); 
         
-        EndSyncOnClient(connectedClientId, _world.GetPersistenceData());
+        EndSyncOnClient(connectedClientId, _world.Data.Serialize());
     }
 
     private void EndSyncOnClient(int id, byte[] serializableData) => RpcId(id, MethodName.EndSyncOnClientRpc, serializableData);
-    [Rpc(CallLocal = true)] 
+    [Rpc(CallLocal = true)]
     private void EndSyncOnClientRpc(byte[] serializableData)
     {
-        _world.AddPersistenceData(serializableData);
+        _world.Data.Deserialize(serializableData);
         SyncEndedOnClientEvent.Invoke();
     }
     

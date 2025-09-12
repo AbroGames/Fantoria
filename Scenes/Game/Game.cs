@@ -45,7 +45,8 @@ public partial class Game : Node2D
     public Synchronizer AddSynchronizer()
     {
         _synchronizer?.QueueFree();
-        _synchronizer = new Synchronizer(WorldContainer.GetCurrentStoredNode<World.World>());
+        _synchronizer = new Synchronizer()
+            .Init(WorldContainer.GetCurrentStoredNode<World.World>());
         this.AddChildWithName(_synchronizer, "Synchronizer");
         return _synchronizer;
     }
