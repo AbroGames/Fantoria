@@ -3,10 +3,6 @@ using Godot;
 
 namespace Fantoria.Scenes.Game;
 
-//TODO Мб перенести класс в World, т.к. данные игрока туда синкаются, а LoadingScreen можно дергать через назначаемые Action-ы
-//TODO Но синхронайзер удобен тут тем, что он по разному вызывается из стартеров. Мб часть оставить тут, но отсюда просто вызывать Action-ы в World? В World.PlayerData?
-//TODO Оставить тут логику скринов, или это в Hud? По идее Hud привязан к World только должен быть, и LoadingScreen -- это другой объект, а не Hud
-
 /// <summary>
 /// Use for send player data (like nick, color etc.) to server.
 /// We must use synchronizer out of World, because in connecting process World children nodes don't exist.
@@ -16,6 +12,7 @@ public partial class Synchronizer : Node
 
     public Action SyncStartedOnClientEvent;
     public Action SyncEndedOnClientEvent;
+    public Action<string> SyncRejectOnClientEvent;
     
     private World.World _world;
     
@@ -28,24 +25,38 @@ public partial class Synchronizer : Node
     public void StartSyncOnClient()
     {
         SyncStartedOnClientEvent.Invoke();
-        //TODO Take player info from Game/Settings
-        NewClientInitOnServer();
+        string nick = "TestNick-" + Random.Shared.Next(); //TODO Take player info from Game/Settings
+        NewClientInitOnServer(nick);
     }
 
-    private void NewClientInitOnServer() => RpcId(ServerId, MethodName.NewClientInitOnServerRpc);
+    private void NewClientInitOnServer(string nick) => RpcId(ServerId, MethodName.NewClientInitOnServerRpc, nick);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)] 
-    private void NewClientInitOnServerRpc()
+    private void NewClientInitOnServerRpc(string nick)
     {
         //TODO Receive and store nickname, color and etc in World.PlayerData. Client info automatically resends to another clients by MpSync.
         int connectedClientId = GetMultiplayer().GetRemoteSenderId();
-        _world.PlayersData.NickByPeerId.Add(connectedClientId, "TestNick"); //TODO Change to real nick
-        EndSyncOnClient(connectedClientId);
+
+        if (_world.PlayerNickByPeerId.Values.Contains(nick))
+        {
+            RejectSyncOnClient(connectedClientId, "Nickname is already used");
+        }
+        _world.PlayerNickByPeerId.Add(connectedClientId, nick); 
+        
+        EndSyncOnClient(connectedClientId, _world.GetPersistenceData());
     }
 
-    private void EndSyncOnClient(int id) => RpcId(id, MethodName.EndSyncOnClientRpc);
+    private void EndSyncOnClient(int id, byte[] serializableData) => RpcId(id, MethodName.EndSyncOnClientRpc, serializableData);
     [Rpc(CallLocal = true)] 
-    private void EndSyncOnClientRpc()
+    private void EndSyncOnClientRpc(byte[] serializableData)
     {
+        _world.AddPersistenceData(serializableData);
         SyncEndedOnClientEvent.Invoke();
+    }
+    
+    private void RejectSyncOnClient(int id, string errorMessage) => RpcId(id, MethodName.RejectSyncOnClientRpc, errorMessage);
+    [Rpc(CallLocal = true)] 
+    private void RejectSyncOnClientRpc(string errorMessage)
+    {
+        SyncRejectOnClientEvent.Invoke(errorMessage);
     }
 }

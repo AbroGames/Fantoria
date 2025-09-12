@@ -31,6 +31,14 @@ public partial class Hud : Control
     {
         _synchronizer.SyncStartedOnClientEvent += () => Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
         _synchronizer.SyncEndedOnClientEvent += () => Service.LoadingScreen.Clear();
+        _synchronizer.SyncRejectOnClientEvent += (errorMessage) =>
+        {
+            Log.Error($"Synchronization with the server was rejected: {errorMessage}");
+            Service.MainScene.StartMainMenu();
+            //TODO Show error message in menu
+            //TODO There are engine network errors in log, need fix
+            Service.LoadingScreen.Clear();
+        };
     }
 
     public override void _Process(double delta)
@@ -48,7 +56,7 @@ public partial class Hud : Control
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
-        Create.Pressed += () => _world.PlayersData.LogData();
-        LogChildren.Pressed += () => _world.LogTree();
+        Create.Pressed += () => { _world.CreatePoint(); };
+        LogChildren.Pressed += () => { _world.LogTree(); };
     }
 }
