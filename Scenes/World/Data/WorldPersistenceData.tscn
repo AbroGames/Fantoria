@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://bic2y3aefedxr"]
+
+[ext_resource type="Script" uid="uid://dly0ofpd10302" path="res://Scenes/World/Data/WorldPersistenceData.cs" id="1_2ykke"]
+[ext_resource type="Script" uid="uid://c7alrukojta7a" path="res://Scenes/World/Data/General/GeneralDataStorage.cs" id="2_4cxp3"]
+[ext_resource type="Script" uid="uid://c2l5yl5sincvf" path="res://Scenes/World/Data/Player/PlayerDataStorage.cs" id="2_w7bjh"]
+
+[node name="WorldPersistenceData" type="Node" node_paths=PackedStringArray("General", "Players")]
+script = ExtResource("1_2ykke")
+General = NodePath("GeneralDataStorage")
+Players = NodePath("PlayerDataStorage")
+
+[node name="GeneralDataStorage" type="Node" parent="."]
+script = ExtResource("2_4cxp3")
+
+[node name="PlayerDataStorage" type="Node" parent="."]
+script = ExtResource("2_w7bjh")

@@ -5,10 +5,9 @@ public class WorldStarter(World world)
 
     public void StartOnServer(string saveFilePath = null)
     {
-        world.AddPersistenceData();
         if (saveFilePath != null)
         {
-            world.Data.SaveFilePath = saveFilePath;
+            world.Data.General.GeneralData.SaveFilePath = saveFilePath;
             new WorldSaveLoad(world).LoadFromDiskOnServer();
         }
         else

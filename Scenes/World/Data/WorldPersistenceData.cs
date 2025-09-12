@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Fantoria.Scenes.World.Data.General;
+using Fantoria.Scenes.World.Data.Player;
 using Godot;
 
 namespace Fantoria.Scenes.World.Data;
@@ -6,23 +9,21 @@ namespace Fantoria.Scenes.World.Data;
 public partial class WorldPersistenceData : Node
 {
     
-    public string SaveFilePath { get; set; } // World will be to save to this file on server
+    [Export] [NotNull] public GeneralDataStorage General { get; private set; }
+    [Export] [NotNull] public PlayerDataStorage Players { get; private set; }
     
-    public Dictionary<string, PlayerData> PlayerByNick = new();
-   /* private string _saveFilePath;
-    public string SaveFilePath
+    public override void _Ready()
     {
-        get => _saveFilePath;
-        set
-        {
-            _saveFilePath = value;
-            Rpc(nameof(RpcSetSaveFilePath), value); // отправляем всем игрокам
-        }
+        NotNullChecker.CheckProperties(this);
     }
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void RpcSetSaveFilePath(string path)
-    {
-        SaveFilePath = path;
-    }*/
     
+    public byte[] Serialize()
+    {
+        return new byte[1]; //TODO MessagePack.Serialize
+    }
+    
+    public void Deserialize(byte[] serializableData = null)
+    { 
+        //TODO Data = MessagePack.Deserialize
+    }
 }
