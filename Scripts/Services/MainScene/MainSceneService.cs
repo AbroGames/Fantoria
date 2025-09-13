@@ -55,8 +55,8 @@ public class MainSceneService
         Game game = _gamePackedScene.Instantiate<Game>();
         game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
-        
-        string adminNickname = ""; //TODO current user nickname. Сделать по аналогии с ником/цветом для синхронайзера
+
+        string adminNickname = Service.PlayerSettings.GetPlayerSettings().Nick;
         
         if (createDedicatedServerProcess ?? false)
         {

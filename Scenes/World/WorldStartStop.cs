@@ -3,22 +3,23 @@
 public class WorldStartStop(World world)
 {
     
-    public void StartNewGame()
+    public void StartNewGame(string adminNickname = null)
     {
-        ServerInit();
+        ServerInit(adminNickname);
         world.AddMapSurface();
     }
     
-    public void LoadGame(string saveFileName)
+    public void LoadGame(string saveFileName, string adminNickname = null)
     {
-        ServerInit();
+        ServerInit(adminNickname);
         world.Data.SaveLoad.Load(saveFileName);
         
-        //TODO Restore World state on data
+        //TODO Restore World state from data
     }
 
-    private void ServerInit()
+    private void ServerInit(string adminNickname = null)
     {
+        world.MainAdminNick = adminNickname;
         world.StateChecker.InitOnServer();
     }
     

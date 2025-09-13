@@ -1,5 +1,6 @@
 ﻿using System;
 using Fantoria.Scenes.World.Data.Player;
+using Fantoria.Scripts.Services.Settings;
 using Godot;
 
 namespace Fantoria.Scenes.Game;
@@ -16,11 +17,15 @@ public partial class Synchronizer : Node
     public Action<string> SyncRejectOnClientEvent;
     
     private World.World _world;
+    private PlayerSettings _playerSettings;
     
-    public Synchronizer Init(World.World world)
+    public Synchronizer Init(World.World world, PlayerSettings playerSettings)
     {
         if (world == null) Log.Error("World must be not null");
         _world = world;
+        
+        if (playerSettings == null) Log.Error("PlayerSettings must be not null");
+        _playerSettings = playerSettings;
 
         return this;
     }
@@ -28,21 +33,22 @@ public partial class Synchronizer : Node
     public void StartSyncOnClient()
     {
         SyncStartedOnClientEvent.Invoke();
-        string nick = "TestNick-" + Random.Shared.Next(); //TODO Take player info from Game/Settings
-        Color color = new Color(1, 1, 1);
-        NewClientInitOnServer(nick, color);
+        NewClientInitOnServer(_playerSettings.Nick, _playerSettings.Color);
     }
 
     private void NewClientInitOnServer(string nick, Color color) => RpcId(ServerId, MethodName.NewClientInitOnServerRpc, nick, color);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)] 
     private void NewClientInitOnServerRpc(string nick, Color color)
     {
-        //TODO Receive and store nickname, color and etc in World.PlayerData. Client info automatically resends to another clients by MpSync.
         int connectedClientId = GetMultiplayer().GetRemoteSenderId();
 
         if (_world.PlayerNickByPeerId.Values.Contains(nick))
         {
             RejectSyncOnClient(connectedClientId, "Nickname is already used");
+        }
+        if (nick.Length < 3 || nick.Length > 25)
+        {
+            RejectSyncOnClient(connectedClientId, "Lenght of nickname must be between 3 and 25 characters");
         }
         _world.PlayerNickByPeerId.Add(connectedClientId, nick);
 
@@ -51,7 +57,8 @@ public partial class Synchronizer : Node
             PlayerData playerData = new()
             {
                 Nick = nick,
-                Color = color
+                Color = color,
+                IsAdmin = nick.Equals(_world.MainAdminNick)
             };
             _world.Data.Players.AddPlayer(playerData);
         }

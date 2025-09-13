@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Surface.Battle;
@@ -21,7 +20,8 @@ public partial class World : Node2D
     
     public readonly WorldEvents Events = new();
     public WorldStartStop StartStop;
-    
+
+    [Export] public string MainAdminNick = null;
     [Export] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
 
     //TODO Может быть заменить ручную настройку ноды синхронизатора, на автоматическую, через пометку аннотацией типа [Sync]? Sync может быть наследником [Export], тогда, возможно, хватит только Sync.

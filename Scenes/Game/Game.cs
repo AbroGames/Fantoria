@@ -3,6 +3,7 @@ using Fantoria.Scenes.Game.Net;
 using Fantoria.Scenes.Game.Starters;
 using Fantoria.Scenes.Screen.Hud;
 using Fantoria.Scenes.World;
+using Fantoria.Scripts.Services.Settings;
 using Godot;
 
 namespace Fantoria.Scenes.Game;
@@ -42,11 +43,11 @@ public partial class Game : Node2D
         return world;
     }
 
-    public Synchronizer AddSynchronizer()
+    public Synchronizer AddSynchronizer(PlayerSettings playerSettings)
     {
         _synchronizer?.QueueFree();
         _synchronizer = new Synchronizer()
-            .Init(WorldContainer.GetCurrentStoredNode<World.World>());
+            .Init(WorldContainer.GetCurrentStoredNode<World.World>(), playerSettings);
         this.AddChildWithName(_synchronizer, "Synchronizer");
         return _synchronizer;
     }

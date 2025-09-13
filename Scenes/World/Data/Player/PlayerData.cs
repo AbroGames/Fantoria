@@ -13,6 +13,8 @@ public partial class PlayerData : ObservableObject
     [Key(1)] [ObservableProperty] private float _colorR;
     [Key(2)] [ObservableProperty] private float _colorG;
     [Key(3)] [ObservableProperty] private float _colorB;
+    
+    [Key(4)] [ObservableProperty] private bool _isAdmin;
 
     [IgnoreMember]
     public Color Color

@@ -1,6 +1,7 @@
 ﻿using Fantoria.Lib.Nodes.Process;
 using Fantoria.Scenes.Game.Net;
 using Fantoria.Scripts.Content.LoadingScreen;
+using Fantoria.Scripts.Services.Settings;
 using Godot;
 
 namespace Fantoria.Scenes.Game.Starters;
@@ -22,8 +23,9 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             game.AddChild(clientDeadChecker);
         }
         
+        PlayerSettings playerSettings = Service.PlayerSettings.GetPlayerSettings();
         World.World world = game.AddWorld();
-        Synchronizer synchronizer = game.AddSynchronizer();
+        Synchronizer synchronizer = game.AddSynchronizer(playerSettings);
         game.DoClient(() => game.AddHud());
         Network network = game.AddNetwork();
         
@@ -34,7 +36,7 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             return;
         }
 
-        world.StartStop.StartNewGame(); //TODO Сделать так, чтобы клиент не мог подключиться до инита/загрузки мира: создавать до хоста, хостить с недоступным Bind IP, а потом менять на *. Резать подключение в синхронайзере.
+        world.StartStop.StartNewGame(adminNickname); //TODO Сделать так, чтобы клиент не мог подключиться до инита/загрузки мира: создавать до хоста, хостить с недоступным Bind IP, а потом менять на *. Резать подключение в синхронайзере.
         game.DoClient(synchronizer.StartSyncOnClient);
     }
     

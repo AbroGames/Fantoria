@@ -1,5 +1,6 @@
 ﻿using Fantoria.Scenes.Game.Net;
 using Fantoria.Scripts.Content.LoadingScreen;
+using Fantoria.Scripts.Services.Settings;
 using Godot;
 
 namespace Fantoria.Scenes.Game.Starters;
@@ -12,8 +13,9 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         base.Init(game);
         Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Connecting);
         
+        PlayerSettings playerSettings = Service.PlayerSettings.GetPlayerSettings();
         game.AddWorld();
-        Synchronizer synchronizer = game.AddSynchronizer();
+        Synchronizer synchronizer = game.AddSynchronizer(playerSettings);
         game.AddHud();
         Network network = game.AddNetwork();
         
