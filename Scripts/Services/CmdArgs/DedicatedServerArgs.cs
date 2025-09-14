@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Fantoria.Scripts.Services.CmdArgs;
 
-public readonly record struct DedicatedServerArgs(bool IsHeadless, int? Port, string Admin, int? ParentPid)
+public readonly record struct DedicatedServerArgs(bool IsHeadless, int? Port, string Admin, int? ParentPid, bool IsRender)
 {
     public static readonly string DedicatedServerFlag = "--server";
     
@@ -10,6 +10,7 @@ public readonly record struct DedicatedServerArgs(bool IsHeadless, int? Port, st
     public static readonly string PortParam = "--port";
     public static readonly string AdminParam = "--admin";
     public static readonly string ParentPidParam = "--parent-pid";
+    public static readonly string RenderParam = "--render";
     
     public static DedicatedServerArgs GetFromCmd(Lib.Services.CmdArgs.CmdArgsService argsService)
     {
@@ -17,7 +18,8 @@ public readonly record struct DedicatedServerArgs(bool IsHeadless, int? Port, st
             argsService.ContainsInCmdArgs(HeadlessFlag),
             argsService.GetIntFromCmdArgs(PortParam),
             argsService.GetStringFromCmdArgs(AdminParam),
-            argsService.GetIntFromCmdArgs(ParentPidParam)
+            argsService.GetIntFromCmdArgs(ParentPidParam),
+            argsService.ContainsInCmdArgs(RenderParam)
         );
     }
 
@@ -31,6 +33,7 @@ public readonly record struct DedicatedServerArgs(bool IsHeadless, int? Port, st
         if (IsHeadless) listParams.Add(HeadlessFlag);
         if (Admin != null) listParams.AddRange([AdminParam, Admin]);
         if (ParentPid.HasValue) listParams.AddRange([ParentPidParam, ParentPid.ToString()]);
+        if (IsRender) listParams.Add(RenderParam);
 
         return listParams.ToArray();
     }

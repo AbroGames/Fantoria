@@ -1,5 +1,4 @@
-﻿using System;
-using Fantoria.Lib.Nodes.Container;
+﻿using Fantoria.Lib.Nodes.Container;
 using Fantoria.Scenes.Game;
 using Fantoria.Scenes.Game.Starters;
 using Godot;
@@ -75,25 +74,20 @@ public class MainSceneService
     /// <param name="port">Port number on which the server will listen.</param>
     /// <param name="adminNickname">This user can manage the server</param>
     /// <param name="parentPid">If this process is a dedicated server created from a client, use the PID of the client process.</param>
-    public void HostMultiplayerGameAsDedicatedServer(int? port = null, string adminNickname = null, int? parentPid = null)
+    /// <param name="gameRender">Show not the GUI, but the game scene</param>
+    public void HostMultiplayerGameAsDedicatedServer(int? port = null, string adminNickname = null, int? parentPid = null, bool? gameRender = null)
     {
         Game game = _gamePackedScene.Instantiate<Game>();
         game.SetName("Game");
         _mainSceneContainer.ChangeStoredNode(game);
         
         game.Init(new HostMultiplayerGameStarter(port, adminNickname, parentPid));
-    }
-    
-    [Obsolete("Global accessor to MainMenu, like Singleton")] //TODO удалить методы, если не потребуются
-    public MainMenu GetMainMenu()
-    {
-        return _mainSceneContainer.GetCurrentStoredNode<MainMenu>();
-    }
-
-    [Obsolete("Global accessor to Game, like Singleton")]
-    public Game GetGame()
-    {
-        return _mainSceneContainer.GetCurrentStoredNode<Game>();
+        
+        Service.LoadingScreen.Clear();
+        if (!gameRender.HasValue || !gameRender.Value)
+        {
+            //TODO Show GUI with stats
+        }
     }
 
     public bool MainSceneIsMainMenu()

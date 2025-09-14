@@ -2,7 +2,7 @@
 
 namespace Fantoria.Scenes.Game.Starters;
 
-public class HostDedicatedServerAndConnectGameStarter(int? port = null, string adminNickname = null, bool? showGui = null) : ConnectToMultiplayerGameStarter(Localhost, port)
+public class HostDedicatedServerAndConnectGameStarter(int? port = null, string adminNickname = null, bool? showWindow = null) : ConnectToMultiplayerGameStarter(Localhost, port)
 {
     private readonly int? _port = port;
 
@@ -11,7 +11,7 @@ public class HostDedicatedServerAndConnectGameStarter(int? port = null, string a
         int dedicatedServerPid = Service.Process.StartNewDedicatedServerApplication(
             _port ?? DefaultPort, 
             adminNickname, 
-            showGui ?? true);
+            showWindow ?? true);
         
         ProcessShutdowner dedicatedServerShutdowner = new ProcessShutdowner(
             dedicatedServerPid,
