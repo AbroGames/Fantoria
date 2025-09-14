@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bpjqlqsxaute2"]
+[gd_scene load_steps=7 format=3 uid="uid://bpjqlqsxaute2"]
 
 [ext_resource type="Script" uid="uid://dtpndmeabtt07" path="res://Scenes/World/World.cs" id="1_0nbjp"]
 [ext_resource type="PackedScene" uid="uid://baeir4xp6kjyd" path="res://Scenes/World/WorldMultiplayerSpawner.tscn" id="2_ouhkt"]
 [ext_resource type="PackedScene" uid="uid://ba3apeajydxl6" path="res://Scenes/World/WorldPackedScenes.tscn" id="2_xf6vi"]
 [ext_resource type="PackedScene" uid="uid://bic2y3aefedxr" path="res://Scenes/World/Data/WorldPersistenceData.tscn" id="3_5jr8x"]
+[ext_resource type="Script" uid="uid://ds2wpas2qvcwm" path="res://Scenes/World/WorldStateChecker.cs" id="4_27jhl"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ouhkt"]
 properties/0/path = NodePath(".:_mapSurfaceName")
@@ -16,13 +17,17 @@ properties/2/path = NodePath(".:PlayerNickByPeerId")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("Data", "PackedScenes")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("Data", "StateChecker", "PackedScenes")]
 script = ExtResource("1_0nbjp")
-Data = NodePath("WorldPersistenceData")
+Data = NodePath("PersistenceData")
+StateChecker = NodePath("StateChecker")
 PackedScenes = NodePath("PackedScenes")
 WorldMultiplayerSpawnerPackedScene = ExtResource("2_ouhkt")
 
-[node name="WorldPersistenceData" parent="." instance=ExtResource("3_5jr8x")]
+[node name="PersistenceData" parent="." instance=ExtResource("3_5jr8x")]
+
+[node name="StateChecker" type="Node" parent="."]
+script = ExtResource("4_27jhl")
 
 [node name="PackedScenes" parent="." instance=ExtResource("2_xf6vi")]
 

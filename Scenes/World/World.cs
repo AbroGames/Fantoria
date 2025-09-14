@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Fantoria.Scenes.World.Data;
-using Fantoria.Scenes.World.Data.Player;
-using Fantoria.Scenes.World.StartStop;
 using Fantoria.Scenes.World.Surface.Battle;
 using Fantoria.Scenes.World.Surface.Map;
 using Godot;
@@ -16,10 +15,12 @@ public partial class World : Node2D
     //TODO WorldPackedScenes переименовать в SyncPackedScenes? И отдельно сделать ClientPackedScenes, который не привязан в MpSpawner. В нем всякие эффекты (не гуи, а мировые).
     //TODO А может лучше всё-таки оставить World ПОЛНОСТЬЮ синхронным, а World-эффекты вешать в отдельный слой, по соседству с World. Принцип как у HUD.
     [Export] [NotNull] public WorldPersistenceData Data { get; private set; }
+    [Export] [NotNull] public WorldStateChecker StateChecker  { get; private set; }
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; private set; }
     [Export] [NotNull] public PackedScene WorldMultiplayerSpawnerPackedScene { get; private set; }
-
+    
     public readonly WorldEvents Events = new();
+    public WorldStartStop StartStop;
     
     [Export] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
 
@@ -34,6 +35,9 @@ public partial class World : Node2D
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
+        
+        StartStop = new WorldStartStop(this);
+        StateChecker.Init(this);
     }
 
     public MapSurface AddMapSurface()
@@ -63,7 +67,13 @@ public partial class World : Node2D
         node.TreeExiting += worldMultiplayerSpawner.QueueFree;
         return worldMultiplayerSpawner;
     }
-
+    
+    public override void _Notification(int id)
+    {
+        if (id == NotificationExitTree && this.IsServer()) StartStop.Shutdown();
+    }
+    
+    //TODO Test methods. Remove after tests.
     public void Test1() => RpcId(ServerId, MethodName.Test1Rpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void Test1Rpc()
@@ -83,18 +93,5 @@ public partial class World : Node2D
     private void Test3Rpc()
     {
         Log.Warning("Test 3 RPC called");
-    }
-
-    public void LogTree() => Rpc(MethodName.LogTreeRpc);
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void LogTreeRpc()
-    {
-        Log.Debug(this.GetFullTree());
-        Log.Debug(this.GetTreeHash());
-    }
-    
-    public override void _Notification(int id)
-    {
-        if (id == NotificationExitTree && this.IsServer()) new WorldStopper(this).StopOnServer();
     }
 }
