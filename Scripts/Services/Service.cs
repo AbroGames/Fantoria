@@ -2,6 +2,7 @@
 using Fantoria.Scripts.Services.LoadingScreen;
 using Fantoria.Scripts.Services.MainScene;
 using Fantoria.Scripts.Services.Process;
+using Fantoria.Scripts.Services.Settings;
 
 namespace Fantoria.Scripts.Services;
 
@@ -11,9 +12,10 @@ public static class Service
     public static ProcessService Process => ServiceLocator.Get<ProcessService>();
     public static LoadingScreenService LoadingScreen => ServiceLocator.Get<LoadingScreenService>();
     public static MainSceneService MainScene => ServiceLocator.Get<MainSceneService>();
+    public static PlayerSettingsService PlayerSettings => ServiceLocator.Get<PlayerSettingsService>();
 
     public static class Global
     {
-        public const int ServerId = 1; //TODO Move to another global place
+        
     }
 }
