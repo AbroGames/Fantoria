@@ -18,7 +18,7 @@ public partial class MainMenuConnectPage : MainMenuPage
 
     private void ParseAndConnectToServer()
     {
-        string host = PortTextEdit.Text.Length != 0 ? HostTextEdit.Text : null;
+        string host = HostTextEdit.Text.Length != 0 ? HostTextEdit.Text : null;
         int? port = PortTextEdit.Text.Length != 0 ? PortTextEdit.Text.ToInt() : null;
         Service.MainScene.ConnectToMultiplayerGame(host, port);
     }
