@@ -11,6 +11,12 @@ public class ClientRootStarter : BaseRootStarter
         Log.Info("Initializing Client...");
         
         Service.LoadingScreen.SetLoadingScreen(LoadingScreenTypes.Type.Loading);
+        
+        Service.PlayerSettings.Init();
+        if (Service.CmdArgs.Client.Nick != null)
+        {
+	        Service.PlayerSettings.SetNickTemporarily(Service.CmdArgs.Client.Nick);
+        }
     }
 
     public override void Start(Root root)
