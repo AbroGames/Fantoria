@@ -1,7 +1,6 @@
-﻿using Fantoria.Scenes.World.Data;
-using Godot;
+﻿using Godot;
 
-namespace Fantoria.Scenes.World;
+namespace Fantoria.Scenes.World.Data;
 
 public class WorldDataSaveLoad(WorldPersistenceData worldData)
 {
