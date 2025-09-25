@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using Fantoria.Lib.Utils.Cooldown;
+using Fantoria.Scenes.World.Data;
+using Fantoria.Scenes.World.Tree;
 using Godot;
 
 namespace Fantoria.Scenes.World;
@@ -7,12 +9,14 @@ namespace Fantoria.Scenes.World;
 public partial class WorldStateChecker : Node
 {
 
-    private World _world;
+    private WorldTree _worldTree;
+    private WorldPersistenceData _worldData;
     private AutoCooldown _checkCooldown;
 
-    public void Init(World world)
+    public void Init(WorldTree worldTree, WorldPersistenceData worldData)
     {
-        _world = world;
+        _worldTree = worldTree;
+        _worldData = worldData;
     }
 
     public void InitOnServer()
@@ -32,15 +36,15 @@ public partial class WorldStateChecker : Node
         StateCheckOnClients();
     }
     
-    public void StateCheckOnClients() => StateCheckOnClients(_world.GetTreeHash(), _world.Data.GetDataHash());
+    public void StateCheckOnClients() => StateCheckOnClients(_worldTree.GetTreeHash(), _worldData.GetDataHash());
     private void StateCheckOnClients(string serverWorldTreeHash, string serverWorldDataHash) => 
         Rpc(MethodName.StateCheckOnClientRpc, serverWorldTreeHash, serverWorldDataHash);
     [Rpc(CallLocal = false)]
     private void StateCheckOnClientRpc(string serverWorldTreeHash, string serverWorldDataHash)
     {
-        if (_world.GetTreeHash() != serverWorldTreeHash || _world.Data.GetDataHash() != serverWorldDataHash)
+        if (_worldTree.GetTreeHash() != serverWorldTreeHash || _worldData.GetDataHash() != serverWorldDataHash)
         {
-            NotifyServerAboutInconsistentState(_world.GetFullTree(), _world.Data.GetFullData());
+            NotifyServerAboutInconsistentState(_worldTree.GetFullTree(), _worldData.GetFullData());
         }
     }
 
@@ -52,28 +56,32 @@ public partial class WorldStateChecker : Node
         StringBuilder sb = new StringBuilder();
         sb.AppendLine($"Client has inconsistent state (peer id = {GetMultiplayer().GetRemoteSenderId()})");
 
-        if (!_world.GetFullTree().Equals(clientWorldTree))
+        if (!_worldTree.GetFullTree().Equals(clientWorldTree))
         {
-            sb.AppendLine("Server world tree: " + _world.GetFullTree());
+            sb.AppendLine("Server world tree: " + _worldTree.GetFullTree());
             sb.AppendLine("Client world tree: " + clientWorldTree);
         }
         
-        if (!_world.Data.GetFullData().Equals(clientWorldData))
+        if (!_worldData.GetFullData().Equals(clientWorldData))
         {
-            sb.AppendLine("Server world data: " + _world.Data.GetFullData());
+            sb.AppendLine("Server world data: " + _worldData.GetFullData());
             sb.AppendLine("Client world data: " + clientWorldData);
         }
         
         Log.Warning(sb.ToString());
     }
     
+    /// <summary>
+    /// Log full Tree and Data infos.
+    /// For Debug only.
+    /// </summary>
     public void LogState() => Rpc(MethodName.LogStateRpc);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void LogStateRpc()
     {
-        Log.Debug("World tree: " + _world.GetFullTree());
-        Log.Debug("World data: " + _world.Data.GetFullData());
-        Log.Debug("World tree hash: " + _world.GetTreeHash());
-        Log.Debug("World data hash: " + _world.Data.GetDataHash());
+        Log.Debug("World tree: " + _worldTree.GetFullTree());
+        Log.Debug("World data: " + _worldData.GetFullData());
+        Log.Debug("World tree hash: " + _worldTree.GetTreeHash());
+        Log.Debug("World data hash: " + _worldData.GetDataHash());
     }
 }
