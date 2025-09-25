@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace Fantoria.Scenes.World.Entity.Building;
+namespace Fantoria.Scenes.World.Tree.Entity.Building;
 
 public partial class MapPoint : Node2D
 {
