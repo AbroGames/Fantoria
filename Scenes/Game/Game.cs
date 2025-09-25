@@ -17,7 +17,6 @@ public partial class Game : Node2D
 
     private Network _network;
     private Synchronizer _synchronizer;
-    private WorldMultiplayerSpawner _worldMultiplayerSpawner;
 
     public override void _Ready()
     {
@@ -34,13 +33,16 @@ public partial class Game : Node2D
         World.World world = PackedScenes.World.Instantiate<World.World>();
         world.SetName("World");
         WorldContainer.ChangeStoredNode(world);
-        
-        _worldMultiplayerSpawner?.QueueFree();
-        _worldMultiplayerSpawner = world.WorldMultiplayerSpawnerPackedScene.Instantiate<WorldMultiplayerSpawner>()
-            .Init(world);
-        this.AddChildWithName(_worldMultiplayerSpawner, "MultiplayerSpawner");
-        
         return world;
+    }
+    
+    public Hud AddHud()
+    {
+        Hud hud = PackedScenes.Hud.Instantiate<Hud>()
+            .Init(WorldContainer.GetCurrentStoredNode<World.World>(), _synchronizer);
+        hud.SetName("Hud");
+        HudContainer.ChangeStoredNode(hud);
+        return hud;
     }
 
     public Synchronizer AddSynchronizer(PlayerSettings playerSettings)
@@ -50,14 +52,6 @@ public partial class Game : Node2D
             .Init(WorldContainer.GetCurrentStoredNode<World.World>(), playerSettings);
         this.AddChildWithName(_synchronizer, "Synchronizer");
         return _synchronizer;
-    }
-    
-    public Hud AddHud()
-    {
-        Hud hud = PackedScenes.Hud.Instantiate<Hud>()
-            .Init(WorldContainer.GetCurrentStoredNode<World.World>(), _synchronizer);
-        HudContainer.ChangeStoredNode(hud);
-        return hud;
     }
 
     public Network AddNetwork()
