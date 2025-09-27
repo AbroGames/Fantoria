@@ -13,7 +13,6 @@ public partial class WorldTree : Node2D
 
     private World _world;
     
-    //TODO Возможно ли вообще избавиться от этого "Досинхронизирования" через переменные? Все равно же должен быть какой-то ивент, чтобы Hud и т.п. узнали об изменение свойства. Или сделать в World ивенты, которые подписаны на MpSpawn.Spawned ?
     public MapSurface MapSurface => GetNodeOrNull<MapSurface>(_mapSurfaceName);
     [Export] [Sync] private string _mapSurfaceName;
     

@@ -209,7 +209,6 @@ public static class NodeTreeExtensions
     public static string GetTreeHash(this Node node)
     {
         string inputString = node.GetFullTree();
-        //TODO Hashing process to service (and reuse it in WorldPersistenceData)
         byte[] inputBytes = Encoding.UTF8.GetBytes(inputString);
         byte[] hashBytes = MD5.HashData(inputBytes);
 
