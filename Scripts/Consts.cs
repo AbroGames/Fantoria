@@ -1,10 +1,13 @@
-﻿namespace Fantoria.Scripts;
+﻿using Godot;
+
+namespace Fantoria.Scripts;
 
 public static class Consts
 {
 
     public static class Global
     {
-        public const int ServerId = 1;
+        public const int BroadcastId = (int) MultiplayerPeer.TargetPeerBroadcast;
+        public const int ServerId = (int) MultiplayerPeer.TargetPeerServer;
     }
 }
