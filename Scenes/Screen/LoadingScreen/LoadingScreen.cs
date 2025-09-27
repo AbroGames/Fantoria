@@ -1,8 +1,8 @@
+using System;
 using Godot;
 
 namespace Fantoria.Scenes.Screen.LoadingScreen;
 
-//TODO Now we use Layer = 100 in Scene, but it must work with standard layer value
 public partial class LoadingScreen : CanvasLayer
 {
     [Export] [NotNull] public LoadingAnimHandle LoadingAnimHandle { get; private set; }
@@ -11,6 +11,7 @@ public partial class LoadingScreen : CanvasLayer
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
+        SetLayer(Int32.MaxValue);
     }
 
     public void SetText(string loadingText)

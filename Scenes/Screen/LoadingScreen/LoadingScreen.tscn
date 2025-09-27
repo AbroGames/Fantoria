@@ -22,7 +22,6 @@ _data = [Vector2(0, -0.934066), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0,
 point_count = 3
 
 [node name="LoadingScreen" type="CanvasLayer" node_paths=PackedStringArray("LoadingAnimHandle", "LoadingLabel")]
-layer = 100
 script = ExtResource("1_tw8yx")
 LoadingAnimHandle = NodePath("Control/VBoxContainer/Anim/2DHandle")
 LoadingLabel = NodePath("Control/VBoxContainer/LoadingLabel")
