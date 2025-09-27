@@ -6,7 +6,7 @@ public class WorldStartStop(World world)
     public void StartNewGame(string adminNickname = null)
     {
         ServerInit(adminNickname);
-        world.AddMapSurface();
+        world.Tree.AddMapSurface();
     }
     
     public void LoadGame(string saveFileName, string adminNickname = null)

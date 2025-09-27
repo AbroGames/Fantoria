@@ -4,16 +4,17 @@ namespace Fantoria.Scenes.World;
 
 //TODO This node and scene in Lib utils nodes (as SelfMultiplayerSpawner) + AbstractPackedScenes (with Scenes field) to Lib utils nodes, change here WorldPackedScenes to AbstractPackedScenes
 //TODO Для SelfMultiplayerSpawner: Необходимо создать наслденика сцены, наследника класса, добавить туда PackedScenes со всеми требуемыми нодами. Важно, чтобы в них не было самой SelfMultiplayerSpawner.
+//TODO [GlobalClass] ? Но тогда с PackedScenes проблемы. Или всегда строго из кода создавать и сделать коммент об этом? Чтобы случайно не сломалось как Synchronizer
 public partial class WorldMultiplayerSpawner : MultiplayerSpawner
 {
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; set; }
     
-    private Node _initSpawnPath;
-    private bool _selfSync;
+    [Export] private bool _selfSync;
+    private Node _observableNode;
     
-    public WorldMultiplayerSpawner Init(Node spawnPath, bool selfSync = true)
+    public WorldMultiplayerSpawner Init(Node observableNode, bool selfSync = true)
     {
-        _initSpawnPath = spawnPath;
+        _observableNode = observableNode;
         _selfSync = selfSync;
         return this;
     }
@@ -29,9 +30,15 @@ public partial class WorldMultiplayerSpawner : MultiplayerSpawner
             AddSpawnableScene(SceneFilePath); // Reference by self
         }
         
-        if (_initSpawnPath != null) // _initSpawnPath can be null, if Spawner was synced on network by another Spawner
+        // _observableNode can be null if the Spawner is synced over the network by another Spawner or created in the Editor.
+        // In these cases, SpawnPath must not be null.
+        if (_observableNode != null) 
         {
-            SetSpawnPath(GetPathTo(_initSpawnPath));
+            SetSpawnPath(GetPathTo(_observableNode));
+        }
+        else if (string.IsNullOrEmpty(GetSpawnPath())) 
+        {
+            Log.Error("SelfMultiplayerSpawner must have not null _observableNode or SpawnPath. Spawner path: " + GetPath());
         }
     }
 }
