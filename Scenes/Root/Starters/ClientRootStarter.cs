@@ -31,7 +31,7 @@ public class ClientRootStarter : BaseRootStarter
         else
         {
 	        Service.MainScene.StartMainMenu();
+	        Service.LoadingScreen.Clear();
         }
-        Service.LoadingScreen.Clear();
     }
 }
