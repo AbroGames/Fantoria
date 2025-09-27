@@ -9,6 +9,8 @@ public class NetworkStateMachine
     public bool CanInitialize => _state == State.NotInitialized;
     public bool IsInitializing => _state == State.Connecting || _state == State.Hosting;
     public bool IsActiveGameState => _state == State.Connected || _state == State.Hosted;
+    public bool IsClient => _state == State.Connecting || _state == State.Connected;
+    public bool IsServer => _state == State.Hosting || _state == State.Hosted;
     
     public event Action<State> StateChanged;
     

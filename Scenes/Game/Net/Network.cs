@@ -50,14 +50,17 @@ public partial class Network : Node
         return error; 
     }
     
-    /// <summary>Try to host server</summary>
+    /// <summary>
+    /// Try to host server.
+    /// If server hosted with refuseNewConnections = true, and you must call OpenServer() after hosting process.
+    /// </summary>
     /// <returns>
     /// Returns Godot.Error.Ok if a server was created
     /// Godot.Error.AlreadyInUse if this ENetMultiplayerPeer instance already has an open connection
     /// Godot.Error.CantCreate if the server could not be created
     /// Godot.Error.AlreadyInUse if the server already hosted
     /// </returns>
-    public Error HostServer(int port, int maxClients = 32)
+    public Error HostServer(int port, bool refuseNewConnections = false, int maxClients = 32)
     {
         if (!StateMachine.CanInitialize)
         {
@@ -70,6 +73,7 @@ public partial class Network : Node
         StateMachine.SetState(NetworkStateMachine.State.Hosting);
         var peer = new ENetMultiplayerPeer();
         var error = peer.CreateServer(port, maxClients);
+        peer.RefuseNewConnections = refuseNewConnections;
         Api.MultiplayerPeer = peer;
 
         if (error == Error.Ok)
@@ -84,6 +88,17 @@ public partial class Network : Node
         
         return error;
     }
+
+    public void OpenServer()
+    {
+        if (!StateMachine.IsServer)
+        {
+            Log.Error($"Can't open server in current state: {StateMachine.CurrentState}");
+            return;
+        }
+        
+        Api.MultiplayerPeer.RefuseNewConnections = false;
+    }
     
     public override void _Notification(int id)
     {
@@ -92,16 +107,16 @@ public partial class Network : Node
     
     private void Shutdown()
     {
-        if (Api.HasMultiplayerPeer())
+        if (Api.HasMultiplayerPeer() && Api.GetMultiplayerPeer() is not OfflineMultiplayerPeer)
         {
             Log.Info("Shutting down network...");
-            
+
             Api.MultiplayerPeer.RefuseNewConnections = true;
             foreach (var peer in Api.GetPeers())
             {
                 Api.MultiplayerPeer.DisconnectPeer(peer);
             }
-            Api.MultiplayerPeer = null;
+            Api.MultiplayerPeer = new OfflineMultiplayerPeer();
             StateMachine.SetState(NetworkStateMachine.State.NotInitialized);
             
             Log.Info("Network shutdown successful");
