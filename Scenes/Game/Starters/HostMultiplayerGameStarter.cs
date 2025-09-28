@@ -36,7 +36,11 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             return;
         }
 
-        world.StartStop.StartNewGame(adminNickname); //TODO Сделать так, чтобы клиент не мог подключиться до инита/загрузки мира: создавать до хоста, хостить с недоступным Bind IP, а потом менять на *. Резать подключение в синхронайзере.
+        //TODO Надо чтобы Network.Host был до запуска мира, т.к. требуется IsServer = true (хотя в Offline он тоже может быть true)
+        //TODO При Shutdown Network и World я хочу, чтобы сервер сохранил мир, а клиент нет. Могу ли я настроить порядок Shutdown-ов?
+        //TODO Или как-то поменять логику дефолтного Peer, чтобы было Server = false. Или проверку Node.IsServer делать с peer != null. Но в этом случае разное поведение двух IsServer.
+        //TODO И вообще вынести это из NodeExtension в сервис global Network (вне либы)? Net.IsServer() ? 
+        world.StartStopService.StartNewGame(adminNickname); //TODO Сделать так, чтобы клиент не мог подключиться до инита/загрузки мира: создавать до хоста, хостить с недоступным Bind IP, а потом менять на *. Резать подключение в синхронайзере.
         game.DoClient(synchronizer.StartSyncOnClient);
     }
     

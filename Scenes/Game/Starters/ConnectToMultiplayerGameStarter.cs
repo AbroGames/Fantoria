@@ -27,7 +27,6 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         if (error != Error.Ok)
         {
             ConnectionFailedEvent();
-            return;
         }
     }
 
