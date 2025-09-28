@@ -21,6 +21,7 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         
         game.GetMultiplayer().ConnectedToServer += synchronizer.StartSyncOnClient;
         game.GetMultiplayer().ConnectionFailed += ConnectionFailedEvent;
+        game.GetMultiplayer().ServerDisconnected += ServerDisconnectedEvent;
         
         Error error = network.ConnectToServer(host ?? DefaultHost, port ?? DefaultPort);
         if (error != Error.Ok)
@@ -30,10 +31,19 @@ public class ConnectToMultiplayerGameStarter(string host = null, int? port = nul
         }
     }
 
+    // Failed attempt to connect to the server (did not receive a response from the server within the timeout).
     private void ConnectionFailedEvent()
     {
         Service.MainScene.StartMainMenu();
-        //TODO Show error in menu (it is client). Log already has error.
+        //TODO Show message in menu (it is client). Log already has message.
+        Service.LoadingScreen.Clear();
+    }
+    
+    // Server disconnected (the connection was successful, but the server disconnected us). This may also happen several hours after the connection.
+    private void ServerDisconnectedEvent()
+    {
+        Service.MainScene.StartMainMenu();
+        //TODO Show message in menu (it is client). Log already has message.
         Service.LoadingScreen.Clear();
     }
 }
