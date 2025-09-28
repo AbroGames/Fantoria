@@ -6,7 +6,7 @@ public class WorldDataSaveLoad(WorldPersistenceData worldData)
 {
 
     private const string SaveDirPath = "user://saves/";
-    private const string AutoSavePath = SaveDirPath + "auto.bin";
+    private const string AutoSaveName = "auto.bin";
     
     public void Save(string saveFileName)
     {
@@ -16,7 +16,7 @@ public class WorldDataSaveLoad(WorldPersistenceData worldData)
     
     public void AutoSave()
     {
-        SaveToDisk(worldData.Serialize(), AutoSavePath);
+        SaveToDisk(worldData.Serialize(), AutoSaveName);
     }
 
     public void Load(string saveFileName)
@@ -29,6 +29,12 @@ public class WorldDataSaveLoad(WorldPersistenceData worldData)
     {
         DirAccess.MakeDirRecursiveAbsolute(SaveDirPath);
         using var file = FileAccess.Open(SaveDirPath + saveFileName, FileAccess.ModeFlags.Write);
+        if (file == null)
+        {
+            Log.Error($"Failed to save file '{SaveDirPath + saveFileName}': {FileAccess.GetOpenError()}");
+            return;
+        }
+        
         file.StoreBuffer(data);
         file.Close();
     }
@@ -36,6 +42,12 @@ public class WorldDataSaveLoad(WorldPersistenceData worldData)
     private byte[] LoadFromDisk(string saveFileName)
     {
         using var file = FileAccess.Open(SaveDirPath + saveFileName, FileAccess.ModeFlags.Read);
+        if (file == null)
+        {
+            Log.Error($"Failed to load file '{SaveDirPath + saveFileName}': {FileAccess.GetOpenError()}");
+            return null;
+        }
+        
         byte[] data = file.GetBuffer((long) file.GetLength());
         file.Close();
         
