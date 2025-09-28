@@ -1,18 +1,20 @@
-[gd_scene load_steps=8 format=3 uid="uid://bpjqlqsxaute2"]
+[gd_scene load_steps=9 format=3 uid="uid://bpjqlqsxaute2"]
 
 [ext_resource type="Script" uid="uid://dtpndmeabtt07" path="res://Scenes/World/World.cs" id="1_0nbjp"]
 [ext_resource type="PackedScene" uid="uid://baeir4xp6kjyd" path="res://Scenes/World/WorldMultiplayerSpawner.tscn" id="2_ouhkt"]
 [ext_resource type="PackedScene" uid="uid://ba3apeajydxl6" path="res://Scenes/World/WorldPackedScenes.tscn" id="2_xf6vi"]
 [ext_resource type="PackedScene" uid="uid://bic2y3aefedxr" path="res://Scenes/World/Data/WorldPersistenceData.tscn" id="3_5jr8x"]
 [ext_resource type="PackedScene" uid="uid://c8mpkavrkvkxh" path="res://Scenes/World/Tree/WorldTree.tscn" id="3_hveh7"]
-[ext_resource type="Script" uid="uid://ds2wpas2qvcwm" path="res://Scenes/World/WorldStateChecker.cs" id="4_27jhl"]
+[ext_resource type="Script" uid="uid://ds2wpas2qvcwm" path="res://Scenes/World/Services/WorldStateCheckerService.cs" id="4_27jhl"]
 [ext_resource type="Script" uid="uid://dup0k3cek5wg" path="res://Scenes/World/Services/WorldMultiplayerSpawnerService.cs" id="6_87yka"]
+[ext_resource type="Script" uid="uid://fbb6ibpssx62" path="res://Scenes/World/Services/WorldStartStopService.cs" id="7_kjd5s"]
 
-[node name="World" type="Node2D" node_paths=PackedStringArray("Tree", "Data", "StateChecker", "MultiplayerSpawnerService", "PackedScenes")]
+[node name="World" type="Node2D" node_paths=PackedStringArray("Tree", "Data", "StateCheckerService", "StartStopService", "MultiplayerSpawnerService", "PackedScenes")]
 script = ExtResource("1_0nbjp")
 Tree = NodePath("Tree")
 Data = NodePath("PersistenceData")
-StateChecker = NodePath("StateChecker")
+StateCheckerService = NodePath("StateCheckerService")
+StartStopService = NodePath("StartStopService")
 MultiplayerSpawnerService = NodePath("MultiplayerSpawnerService")
 PackedScenes = NodePath("PackedScenes")
 
@@ -20,8 +22,11 @@ PackedScenes = NodePath("PackedScenes")
 
 [node name="PersistenceData" parent="." instance=ExtResource("3_5jr8x")]
 
-[node name="StateChecker" type="Node" parent="."]
+[node name="StateCheckerService" type="Node" parent="."]
 script = ExtResource("4_27jhl")
+
+[node name="StartStopService" type="Node" parent="."]
+script = ExtResource("7_kjd5s")
 
 [node name="MultiplayerSpawnerService" type="Node" parent="."]
 script = ExtResource("6_87yka")

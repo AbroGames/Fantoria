@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Fantoria.Lib.Nodes.MpSync;
+﻿using Fantoria.Lib.Nodes.MpSync;
 using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Services;
 using Fantoria.Scenes.World.Tree;
 using Godot;
-using Godot.Collections;
-using MapPoint = Fantoria.Scenes.World.Tree.Entity.Building.MapPoint;
 
 namespace Fantoria.Scenes.World;
 
@@ -17,13 +13,13 @@ public partial class World : Node2D
     
     [Export] [NotNull] public WorldTree Tree { get; private set; }
     [Export] [NotNull] public WorldPersistenceData Data { get; private set; }
-    [Export] [NotNull] public WorldStateChecker StateChecker  { get; private set; }
+    [Export] [NotNull] public WorldStateCheckerService StateCheckerService  { get; private set; }
+    [Export] [NotNull] public WorldStartStopService StartStopService  { get; private set; }
     [Export] [NotNull] public WorldMultiplayerSpawnerService MultiplayerSpawnerService { get; private set; }
     
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; private set; }
     
     public readonly WorldEvents Events = new();
-    public WorldStartStop StartStop;
     
     
     /// <summary>
@@ -42,17 +38,12 @@ public partial class World : Node2D
     {
         NotNullChecker.CheckProperties(this);
         
-        StartStop = new WorldStartStop(this);
-        StateChecker.Init(Tree, Data);
+        StartStopService.Init(this);
+        StateCheckerService.Init(Tree, Data);
         
         Tree.Init(this);
         
         this.AddChildWithName(new AttributeMultiplayerSynchronizer(this), "MultiplayerSynchronizer");
-    }
-    
-    public override void _Notification(int id)
-    {
-        if (id == NotificationExitTree && this.IsServer()) StartStop.Shutdown();
     }
     
     //TODO Test methods. Remove after tests.

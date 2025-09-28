@@ -4,9 +4,9 @@ using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Tree;
 using Godot;
 
-namespace Fantoria.Scenes.World;
+namespace Fantoria.Scenes.World.Services;
 
-public partial class WorldStateChecker : Node
+public partial class WorldStateCheckerService : Node
 {
 
     private WorldTree _worldTree;

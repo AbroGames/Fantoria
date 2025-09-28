@@ -35,7 +35,7 @@ public partial class Hud : Control
         Test1.Pressed += () => { _world.Test1(); };
         Test2.Pressed += () => { _world.Test2(); };
         Test3.Pressed += () => { _world.Test3(); };
-        LogChildren.Pressed += () => { _world.StateChecker.LogState(); _world.StateChecker.StateCheckRequest(); };
+        LogChildren.Pressed += () => { _world.StateCheckerService.LogState(); _world.StateCheckerService.StateCheckRequest(); };
     }
 
     private void ConnectToEvents()
