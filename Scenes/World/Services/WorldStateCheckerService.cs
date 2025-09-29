@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 using Fantoria.Lib.Utils.Cooldown;
 using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Tree;
@@ -36,15 +37,15 @@ public partial class WorldStateCheckerService : Node
         StateCheckOnClients();
     }
     
-    public void StateCheckOnClients() => StateCheckOnClients(_worldTree.GetTreeHash(), _worldData.GetDataHash());
+    public void StateCheckOnClients() => StateCheckOnClients(GetWorldTreeHash(), GetWorldDataHash());
     private void StateCheckOnClients(string serverWorldTreeHash, string serverWorldDataHash) => 
         Rpc(MethodName.StateCheckOnClientRpc, serverWorldTreeHash, serverWorldDataHash);
     [Rpc(CallLocal = false)]
     private void StateCheckOnClientRpc(string serverWorldTreeHash, string serverWorldDataHash)
     {
-        if (_worldTree.GetTreeHash() != serverWorldTreeHash || _worldData.GetDataHash() != serverWorldDataHash)
+        if (GetWorldTreeHash() != serverWorldTreeHash || GetWorldDataHash() != serverWorldDataHash)
         {
-            NotifyServerAboutInconsistentState(_worldTree.GetFullTree(), _worldData.GetDataHash());
+            NotifyServerAboutInconsistentState(GetWorldTreeHash(), GetWorldDataHash());
         }
     }
 
@@ -56,15 +57,15 @@ public partial class WorldStateCheckerService : Node
         StringBuilder sb = new StringBuilder();
         sb.AppendLine($"Client has inconsistent state (peer id = {GetMultiplayer().GetRemoteSenderId()})");
 
-        if (!_worldTree.GetFullTree().Equals(clientWorldTree))
+        if (!GetWorldTreeHash().Equals(clientWorldTree))
         {
-            sb.AppendLine("Server world tree: " + _worldTree.GetFullTree());
+            sb.AppendLine("Server world tree: " + GetWorldTreeHash());
             sb.AppendLine("Client world tree: " + clientWorldTree);
         }
         
-        if (!_worldData.GetDataHash().Equals(clientWorldDataHash))
+        if (!GetWorldDataHash().Equals(clientWorldDataHash))
         {
-            sb.AppendLine("Server world data: " + _worldData.GetDataHash());
+            sb.AppendLine("Server world data: " + GetWorldDataHash());
             sb.AppendLine("Client world data: " + clientWorldDataHash);
         }
         
@@ -79,8 +80,62 @@ public partial class WorldStateCheckerService : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void LogStateRpc()
     {
-        Log.Debug("World tree: " + _worldTree.GetFullTree());
-        Log.Debug("World tree hash: " + _worldTree.GetTreeHash());
-        Log.Debug("World data hash: " + _worldData.GetDataHash());
+        Log.Debug("World tree: " + GetWorldTree());
+        Log.Debug("World tree hash: " + GetWorldTreeHash());
+        Log.Debug("World data hash: " + GetWorldDataHash());
+    }
+    
+    private string GetWorldTree()
+    {
+        return GetFullTree(_worldTree);
+    }
+
+    private string GetWorldTreeHash()
+    {
+        return Hash(GetWorldTree());
+    }
+
+    private string GetWorldDataHash()
+    {
+        return Hash(_worldData.Serializer.SerializeWorldData());
+    }
+    
+    /// <summary>
+    /// Get full path for all children of this node
+    /// It works only for server nodes!
+    /// It means nodes with MultiplayerAuthority != ServerId (and their children) will not be display in tree
+    /// Can be used for compare Client/Server trees in debug
+    /// </summary>
+    private string GetFullTree(Node node)
+    {
+        if (node.GetMultiplayerAuthority() != ServerId) return "";
+        
+        StringBuilder sb = new();
+        sb.AppendLine(); 
+        sb.Append(node.GetPath());
+        foreach (var child in node.GetChildren()) 
+        {
+            sb.Append(GetFullTree(child));
+        }
+        return sb.ToString();
+    }
+    
+    private string Hash(string inputString)
+    {
+        byte[] inputBytes = Encoding.UTF8.GetBytes(inputString);
+        return Hash(inputBytes);
+    }
+
+    private string Hash(byte[] inputBytes)
+    {
+        byte[] hashBytes = MD5.HashData(inputBytes);
+
+        StringBuilder sb = new StringBuilder();
+        foreach (byte b in hashBytes)
+        {
+            sb.Append(b.ToString("x2"));
+        }
+
+        return sb.ToString();
     }
 }

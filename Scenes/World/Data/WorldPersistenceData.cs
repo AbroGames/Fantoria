@@ -22,17 +22,4 @@ public partial class WorldPersistenceData : Node
         SaveLoad = new(this);
         Serializer = new(this);
     }
-
-    public string GetDataHash()
-    {
-        byte[] hashBytes = MD5.HashData(Serializer.SerializeWorldData());
-
-        StringBuilder sb = new StringBuilder();
-        foreach (byte b in hashBytes)
-        {
-            sb.Append(b.ToString("x2"));
-        }
-
-        return sb.ToString();
-    }
 }
