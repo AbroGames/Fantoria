@@ -44,14 +44,14 @@ public partial class WorldStateCheckerService : Node
     {
         if (_worldTree.GetTreeHash() != serverWorldTreeHash || _worldData.GetDataHash() != serverWorldDataHash)
         {
-            NotifyServerAboutInconsistentState(_worldTree.GetFullTree(), _worldData.GetFullData());
+            NotifyServerAboutInconsistentState(_worldTree.GetFullTree(), _worldData.GetDataHash());
         }
     }
 
-    private void NotifyServerAboutInconsistentState(string clientWorldTree, string clientWorldData) => 
-        RpcId(ServerId, MethodName.NotifyServerAboutInconsistentStateRpc, clientWorldTree, clientWorldData);
+    private void NotifyServerAboutInconsistentState(string clientWorldTree, string clientWorldDataHash) => 
+        RpcId(ServerId, MethodName.NotifyServerAboutInconsistentStateRpc, clientWorldTree, clientWorldDataHash);
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
-    private void NotifyServerAboutInconsistentStateRpc(string clientWorldTree, string clientWorldData)
+    private void NotifyServerAboutInconsistentStateRpc(string clientWorldTree, string clientWorldDataHash)
     {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine($"Client has inconsistent state (peer id = {GetMultiplayer().GetRemoteSenderId()})");
@@ -62,10 +62,10 @@ public partial class WorldStateCheckerService : Node
             sb.AppendLine("Client world tree: " + clientWorldTree);
         }
         
-        if (!_worldData.GetFullData().Equals(clientWorldData))
+        if (!_worldData.GetDataHash().Equals(clientWorldDataHash))
         {
-            sb.AppendLine("Server world data: " + _worldData.GetFullData());
-            sb.AppendLine("Client world data: " + clientWorldData);
+            sb.AppendLine("Server world data: " + _worldData.GetDataHash());
+            sb.AppendLine("Client world data: " + clientWorldDataHash);
         }
         
         Log.Warning(sb.ToString());
@@ -80,7 +80,6 @@ public partial class WorldStateCheckerService : Node
     private void LogStateRpc()
     {
         Log.Debug("World tree: " + _worldTree.GetFullTree());
-        Log.Debug("World data: " + _worldData.GetFullData());
         Log.Debug("World tree hash: " + _worldTree.GetTreeHash());
         Log.Debug("World data hash: " + _worldData.GetDataHash());
     }
