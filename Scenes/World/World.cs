@@ -21,7 +21,6 @@ public partial class World : Node2D
     
     public readonly WorldEvents Events = new();
     
-    
     /// <summary>
     /// Hoster nick, or nick from cmd param in dedicated server
     /// Player.IsAdmin in WorldPersistenceData for this player automatically will change to true
@@ -32,7 +31,7 @@ public partial class World : Node2D
     /// <summary>
     /// List of current connected players
     /// </summary>
-    [Export]  [Sync] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
+    [Export] [Sync] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
     
     public override void _Ready()
     {
@@ -44,6 +43,11 @@ public partial class World : Node2D
         Tree.Init(this);
         
         this.AddChildWithName(new AttributeMultiplayerSynchronizer(this), "MultiplayerSynchronizer");
+    }
+
+    public void InitOnServer()
+    {
+        GetMultiplayer().PeerDisconnected += id => PlayerNickByPeerId.Remove((int) id);
     }
     
     //TODO Test methods. Remove after tests.

@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.Linq;
+using Godot;
 
 namespace Fantoria.Scenes.World.Services;
 
@@ -37,7 +38,9 @@ public partial class WorldStartStopService : Node
     private void ServerInit(string adminNickname = null)
     {
         _isServer = true;
+        
         _world.MainAdminNick = adminNickname;
+        _world.InitOnServer();
         _world.StateCheckerService.InitOnServer();
     }
     
