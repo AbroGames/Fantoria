@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Fantoria.Scenes.World.Data.General;
+﻿using Fantoria.Scenes.World.Data.General;
 using Fantoria.Scenes.World.Data.Player;
 using Godot;
 

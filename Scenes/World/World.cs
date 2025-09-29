@@ -9,10 +9,9 @@ namespace Fantoria.Scenes.World;
 public partial class World : Node2D
 {
     
-    //TODO WorldPackedScenes переименовать в SyncPackedScenes/ServerPackedScenes? И отдельно сделать ClientPackedScenes, который не привязан в MpSpawner. В нем всякие эффекты (не гуи, а мировые).
-    
     [Export] [NotNull] public WorldTree Tree { get; private set; }
     [Export] [NotNull] public WorldPersistenceData Data { get; private set; }
+    [Export] [NotNull] public WorldTemporaryDataService TemporaryDataService { get; private set; }
     [Export] [NotNull] public WorldStateCheckerService StateCheckerService  { get; private set; }
     [Export] [NotNull] public WorldStartStopService StartStopService  { get; private set; }
     [Export] [NotNull] public WorldMultiplayerSpawnerService MultiplayerSpawnerService { get; private set; }
@@ -21,33 +20,15 @@ public partial class World : Node2D
     
     public readonly WorldEvents Events = new();
     
-    /// <summary>
-    /// Hoster nick, or nick from cmd param in dedicated server
-    /// Player.IsAdmin in WorldPersistenceData for this player automatically will change to true
-    /// If next application start will be with MainAdminNick = null, then Player.IsAdmin in WorldPersistenceData stay true anyway
-    /// </summary>
-    [Export] [Sync] public string MainAdminNick; 
-    
-    /// <summary>
-    /// List of current connected players
-    /// </summary>
-    [Export] [Sync] public Godot.Collections.Dictionary<int, string> PlayerNickByPeerId = new();
-    
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
         
         StartStopService.Init(this);
         StateCheckerService.Init(Tree, Data);
-        
         Tree.Init(this);
         
         this.AddChildWithName(new AttributeMultiplayerSynchronizer(this), "MultiplayerSynchronizer");
-    }
-
-    public void InitOnServer()
-    {
-        GetMultiplayer().PeerDisconnected += id => PlayerNickByPeerId.Remove((int) id);
     }
     
     //TODO Test methods. Remove after tests.

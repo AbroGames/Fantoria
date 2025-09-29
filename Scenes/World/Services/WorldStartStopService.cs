@@ -39,8 +39,7 @@ public partial class WorldStartStopService : Node
     {
         _isServer = true;
         
-        _world.MainAdminNick = adminNickname;
-        _world.InitOnServer();
+        _world.TemporaryDataService.InitOnServer(adminNickname);
         _world.StateCheckerService.InitOnServer();
     }
     
