@@ -11,18 +11,18 @@ public class WorldDataSaveLoad(WorldPersistenceData worldData)
     public void Save(string saveFileName)
     {
         worldData.General.GeneralData.SaveFileName = saveFileName;
-        SaveToDisk(worldData.Serialize(), saveFileName);
+        SaveToDisk(worldData.Serializer.SerializeWorldData(), saveFileName);
     }
     
     public void AutoSave()
     {
-        SaveToDisk(worldData.Serialize(), AutoSaveName);
+        SaveToDisk(worldData.Serializer.SerializeWorldData(), AutoSaveName);
     }
 
     public void Load(string saveFileName)
     {
         byte[] data = LoadFromDisk(saveFileName);
-        worldData.Deserialize(data);
+        worldData.Serializer.DeserializeWorldData(data);
     }
 
     private void SaveToDisk(byte[] data, string saveFileName)

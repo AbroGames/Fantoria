@@ -63,14 +63,14 @@ public partial class Synchronizer : Node
             _world.Data.Players.AddPlayer(playerData);
         }
         
-        EndSyncOnClient(connectedClientId, _world.Data.Serialize());
+        EndSyncOnClient(connectedClientId, _world.Data.Serializer.SerializeWorldData());
     }
 
     private void EndSyncOnClient(int id, byte[] serializableData) => RpcId(id, MethodName.EndSyncOnClientRpc, serializableData);
     [Rpc(CallLocal = true)]
     private void EndSyncOnClientRpc(byte[] serializableData)
     {
-        _world.Data.Deserialize(serializableData);
+        _world.Data.Serializer.DeserializeWorldData(serializableData);
         SyncEndedOnClientEvent.Invoke();
     }
     

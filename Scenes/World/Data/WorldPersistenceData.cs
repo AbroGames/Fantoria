@@ -13,32 +13,19 @@ public partial class WorldPersistenceData : Node
     [Export] [NotNull] public PlayerDataStorage Players { get; private set; }
     
     public WorldDataSaveLoad SaveLoad;
+    public WorldDataSerializer Serializer;
     
     public override void _Ready()
     {
         NotNullChecker.CheckProperties(this);
 
         SaveLoad = new(this);
-    }
-    
-    public byte[] Serialize()
-    {
-        return new byte[1]; //TODO MessagePack.Serialize
-    }
-    
-    public void Deserialize(byte[] serializableData = null)
-    { 
-        //TODO Data = MessagePack.Deserialize
-    }
-
-    public string GetFullData()
-    {
-        return "FULL INFO"; //TODO
+        Serializer = new(this);
     }
 
     public string GetDataHash()
     {
-        byte[] hashBytes = MD5.HashData(Serialize());
+        byte[] hashBytes = MD5.HashData(Serializer.SerializeWorldData());
 
         StringBuilder sb = new StringBuilder();
         foreach (byte b in hashBytes)

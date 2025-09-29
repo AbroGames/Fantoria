@@ -43,7 +43,7 @@ public partial class AttributeMultiplayerSynchronizer : MultiplayerSynchronizer
         
         
         List<MemberInfo> members = new();
-        var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
         members.AddRange(type.GetProperties(bindingFlags));
         members.AddRange(type.GetFields(bindingFlags));
 
