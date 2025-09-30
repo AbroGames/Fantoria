@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using Godot;
+﻿using Godot;
 
-namespace Fantoria.Scenes.World.Services;
+namespace Fantoria.Scenes.World.Services.StartStop;
 
 
 public partial class WorldStartStopService : Node
 {
     
     private World _world;
+    private readonly WorldLoadService _worldLoadService = new();
 
     /// <summary>
     /// In shutdown process (TreeExit signal) we can't use Node.GetMultiplayer().IsServer() for checking, because after TreeExit Node.GetMultiplayer() returns null.
@@ -24,15 +24,13 @@ public partial class WorldStartStopService : Node
     public void StartNewGame(string adminNickname = null)
     {
         ServerInit(adminNickname);
-        _world.Tree.AddMapSurface();
     }
     
     public void LoadGame(string saveFileName, string adminNickname = null)
     {
         ServerInit(adminNickname);
         _world.Data.SaveLoad.Load(saveFileName);
-        
-        //TODO Restore World state from data
+        _worldLoadService.RunAllLoaders(_world);
     }
 
     private void ServerInit(string adminNickname = null)

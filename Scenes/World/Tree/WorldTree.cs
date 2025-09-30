@@ -13,8 +13,7 @@ public partial class WorldTree : Node2D
 
     private World _world;
     
-    public MapSurface MapSurface => GetNodeOrNull<MapSurface>(_mapSurfaceName);
-    [Export] [Sync] private string _mapSurfaceName;
+    [Export] [NotNull] public MapSurface MapSurface  { get; private set; }
     
     public List<BattleSurface> BattleSurfaces => _battleSurfacesNames.Select(name => GetNodeOrNull<BattleSurface>(name)).ToList();
     [Export] [Sync] private Array<string> _battleSurfacesNames = new();
@@ -26,17 +25,8 @@ public partial class WorldTree : Node2D
 
     public override void _Ready()
     {
+        NotNullChecker.CheckProperties(this);
         this.AddChildWithName(new AttributeMultiplayerSynchronizer(this), "MultiplayerSynchronizer");
-    }
-
-    public MapSurface AddMapSurface()
-    {
-        MapSurface?.QueueFree();
-        MapSurface mapSurface = _world.PackedScenes.MapSurface.Instantiate<MapSurface>();
-        this.AddChildWithUniqueName(mapSurface, "MapSurface");
-        _mapSurfaceName = mapSurface.Name;
-        _world.MultiplayerSpawnerService.AddSpawnerToNode(mapSurface);
-        return mapSurface;
     }
     
     public BattleSurface AddBattleSurface()

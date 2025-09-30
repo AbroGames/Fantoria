@@ -12,7 +12,7 @@ namespace Fantoria.Lib.Utils.Extensions;
 public static class NodeTreeExtensions
 {
     
-    private static long _nodeCounter;
+    private static ulong _nodeCounter;
     
     /// <summary>
     /// Shortcut for GodotObject.IsInstanceValid(object)
