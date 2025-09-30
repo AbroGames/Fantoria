@@ -20,7 +20,7 @@ public partial class MapPoint : Node2D
         Data.PositionY = Position.Y;
     } 
 
-    public class Loader : IWorldLoader
+    public class Loader : IWorldTreeLoader
     {
         public const string Name = "MapPoint";
         public string GetName() => Name;

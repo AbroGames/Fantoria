@@ -5,15 +5,15 @@ using System.Reflection;
 
 namespace Fantoria.Scenes.World.Services.StartStop;
 
-public class WorldLoadService
+public class WorldTreeLoadService
 {
     public void RunAllLoaders(World world)
     {
         // Get all classes implementing IWorldLoader
-        List<IWorldLoader> loaders = Assembly.GetExecutingAssembly()
+        List<IWorldTreeLoader> loaders = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(t => typeof(IWorldLoader).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-            .Select(t => (IWorldLoader) Activator.CreateInstance(t))
+            .Where(t => typeof(IWorldTreeLoader).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
+            .Select(t => (IWorldTreeLoader) Activator.CreateInstance(t))
             .ToList();
 
         // Sequentially execute phases
@@ -22,10 +22,10 @@ public class WorldLoadService
         ExecutePhase(loaders, l => l.GetFinishRequirements(), l => l.Finish(world));
     }
 
-    private void ExecutePhase(List<IWorldLoader> loaders, Func<IWorldLoader, List<string>> getRequirements, Action<IWorldLoader> action)
+    private void ExecutePhase(List<IWorldTreeLoader> loaders, Func<IWorldTreeLoader, List<string>> getRequirements, Action<IWorldTreeLoader> action)
     {
         // Build graph: nodes = loader name
-        Dictionary<string, IWorldLoader> dict = loaders.ToDictionary(l => l.GetName(), l => l);
+        Dictionary<string, IWorldTreeLoader> dict = loaders.ToDictionary(l => l.GetName(), l => l);
 
         // Topological sort
         List<string> sorted = TopologicalSort(
@@ -36,8 +36,8 @@ public class WorldLoadService
         // Execute in correct order
         foreach (string name in sorted)
         {
-            IWorldLoader loader = dict[name];
-            action(loader);
+            IWorldTreeLoader treeLoader = dict[name];
+            action(treeLoader);
         }
     }
 

@@ -41,4 +41,3 @@ WorldMultiplayerSpawnerPackedScene = ExtResource("2_ouhkt")
 
 [node name="Tree-MultiplayerSpawner" parent="." instance=ExtResource("2_ouhkt")]
 spawn_path = NodePath("../Tree")
-_selfSync = true

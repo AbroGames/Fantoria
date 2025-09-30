@@ -2,7 +2,7 @@
 
 namespace Fantoria.Scenes.World.Services.StartStop;
 
-public interface IWorldLoader
+public interface IWorldTreeLoader
 {
     public string GetName();
 

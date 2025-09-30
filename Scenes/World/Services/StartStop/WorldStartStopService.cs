@@ -7,7 +7,7 @@ public partial class WorldStartStopService : Node
 {
     
     private World _world;
-    private readonly WorldLoadService _worldLoadService = new();
+    private readonly WorldTreeLoadService _worldTreeLoadService = new();
 
     /// <summary>
     /// In shutdown process (TreeExit signal) we can't use Node.GetMultiplayer().IsServer() for checking, because after TreeExit Node.GetMultiplayer() returns null.
@@ -30,7 +30,7 @@ public partial class WorldStartStopService : Node
     {
         ServerInit(adminNickname);
         _world.Data.SaveLoad.Load(saveFileName);
-        _worldLoadService.RunAllLoaders(_world);
+        _worldTreeLoadService.RunAllLoaders(_world);
     }
 
     private void ServerInit(string adminNickname = null)
