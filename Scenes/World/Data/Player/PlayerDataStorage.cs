@@ -66,6 +66,6 @@ public partial class PlayerDataStorage : Node, ISerializableStorage
     
     public void SetAllPropertyListeners()
     {
-        foreach (var player in _innerStorage.PlayerByNick.Values) SetPropertyListener(player);
+        foreach (PlayerData player in _innerStorage.PlayerByNick.Values) SetPropertyListener(player);
     }
 }

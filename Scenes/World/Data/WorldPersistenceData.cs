@@ -1,4 +1,5 @@
 ﻿using Fantoria.Scenes.World.Data.General;
+using Fantoria.Scenes.World.Data.MapPoint;
 using Fantoria.Scenes.World.Data.Player;
 using Godot;
 
@@ -9,6 +10,7 @@ public partial class WorldPersistenceData : Node
     
     [Export] [NotNull] public GeneralDataStorage General { get; private set; }
     [Export] [NotNull] public PlayerDataStorage Players { get; private set; }
+    [Export] [NotNull] public MapPointDataStorage MapPoint { get; private set; }
     
     public WorldDataSaveLoad SaveLoad;
     public WorldDataSerializer Serializer;
