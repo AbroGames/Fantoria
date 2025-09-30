@@ -3,6 +3,7 @@ using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Services;
 using Fantoria.Scenes.World.Tree;
 using Godot;
+using WorldStartStopService = Fantoria.Scenes.World.Services.StartStop.WorldStartStopService;
 
 namespace Fantoria.Scenes.World;
 

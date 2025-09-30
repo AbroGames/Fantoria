@@ -1,0 +1,16 @@
+﻿using System.Collections.Generic;
+
+namespace Fantoria.Scenes.World.Services.StartStop;
+
+public interface IWorldLoader
+{
+    public string GetName();
+
+    public void Create(World world) { }
+    public void Init(World world) { }
+    public void Finish(World world) { }
+
+    public List<string> GetCreateRequirements() { return []; }
+    public List<string> GetInitRequirements() { return []; }
+    public List<string> GetFinishRequirements() { return []; }
+}

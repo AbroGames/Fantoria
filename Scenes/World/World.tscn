@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://ds2wpas2qvcwm" path="res://Scenes/World/Services/WorldStateCheckerService.cs" id="4_27jhl"]
 [ext_resource type="Script" uid="uid://b1lvv7kolowbi" path="res://Scenes/World/Services/WorldTemporaryDataService.cs" id="4_p7pgw"]
 [ext_resource type="Script" uid="uid://dup0k3cek5wg" path="res://Scenes/World/Services/WorldMultiplayerSpawnerService.cs" id="6_87yka"]
-[ext_resource type="Script" uid="uid://fbb6ibpssx62" path="res://Scenes/World/Services/WorldStartStopService.cs" id="7_kjd5s"]
+[ext_resource type="Script" uid="uid://fbb6ibpssx62" path="res://Scenes/World/Services/StartStop/WorldStartStopService.cs" id="6_p7pgw"]
 
 [node name="World" type="Node2D" node_paths=PackedStringArray("Tree", "Data", "TemporaryDataService", "StateCheckerService", "StartStopService", "MultiplayerSpawnerService", "PackedScenes")]
 script = ExtResource("1_0nbjp")
@@ -31,7 +31,7 @@ script = ExtResource("4_p7pgw")
 script = ExtResource("4_27jhl")
 
 [node name="StartStopService" type="Node" parent="."]
-script = ExtResource("7_kjd5s")
+script = ExtResource("6_p7pgw")
 
 [node name="MultiplayerSpawnerService" type="Node" parent="."]
 script = ExtResource("6_87yka")

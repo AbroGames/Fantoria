@@ -9,7 +9,7 @@ public partial class WorldMultiplayerSpawner : MultiplayerSpawner
 {
     [Export] [NotNull] public WorldPackedScenes PackedScenes { get; set; }
     
-    [Export] private bool _selfSync;
+    [Export] private bool _selfSync = true;
     private Node _observableNode;
     
     public WorldMultiplayerSpawner Init(Node observableNode, bool selfSync = true)
