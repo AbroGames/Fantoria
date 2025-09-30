@@ -6,7 +6,7 @@ using Godot;
 
 namespace Fantoria.Scenes.Game.Starters;
 
-public class HostMultiplayerGameStarter(int? port = null, string adminNickname = null, int? parentPid = null) : BaseGameStarter
+public class HostMultiplayerGameStarter(int? port = null, string saveFileName = null, string adminNickname = null, int? parentPid = null) : BaseGameStarter
 {
     public override void Init(Game game)
     {
@@ -34,8 +34,15 @@ public class HostMultiplayerGameStarter(int? port = null, string adminNickname =
             game.DoClient(HostFailedEventOnClient);
             return;
         }
-        
-        world.StartStopService.StartNewGame(adminNickname);
+
+        if (saveFileName == null)
+        {
+            world.StartStopService.StartNewGame(adminNickname);
+        }
+        else
+        {
+            world.StartStopService.LoadGame(saveFileName, adminNickname);
+        }
         network.OpenServer();
         game.DoClient(synchronizer.StartSyncOnClient);
     }

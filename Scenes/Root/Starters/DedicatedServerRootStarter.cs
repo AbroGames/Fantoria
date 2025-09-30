@@ -18,6 +18,7 @@ public class DedicatedServerRootStarter : BaseRootStarter
 
         Service.MainScene.HostMultiplayerGameAsDedicatedServer(
             Service.CmdArgs.DedicatedServer.Port,
+            Service.CmdArgs.DedicatedServer.SaveFileName,
             Service.CmdArgs.DedicatedServer.Admin,
             Service.CmdArgs.DedicatedServer.ParentPid,
             Service.CmdArgs.DedicatedServer.IsRender);

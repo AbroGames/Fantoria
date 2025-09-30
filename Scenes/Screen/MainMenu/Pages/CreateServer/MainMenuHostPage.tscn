@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://diyoqlci6ihjx" path="res://Scenes/Screen/MainMenu/Pages/CreateServer/MainMenuHostPage.cs" id="1_6mkmj"]
 
-[node name="MainMenuHostPage" type="Control" node_paths=PackedStringArray("PortTextEdit", "IsDedicatedCheckBox", "CreateServerButton")]
+[node name="MainMenuHostPage" type="Control" node_paths=PackedStringArray("PortTextEdit", "SaveNameTextEdit", "IsDedicatedCheckBox", "CreateServerButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,6 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6mkmj")
 PortTextEdit = NodePath("VBoxContainer/HBoxContainer/PortTextEdit")
+SaveNameTextEdit = NodePath("VBoxContainer/HBoxContainer/SaveNameTextEdit")
 IsDedicatedCheckBox = NodePath("VBoxContainer/HBoxContainer/DedicatedCheckBox")
 CreateServerButton = NodePath("VBoxContainer/CreateServerButton")
 
@@ -39,6 +40,15 @@ layout_mode = 2
 text = "Port:"
 
 [node name="PortTextEdit" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SaveNameLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Save Name:"
+
+[node name="SaveNameTextEdit" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

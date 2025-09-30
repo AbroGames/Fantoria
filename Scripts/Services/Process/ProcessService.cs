@@ -12,9 +12,9 @@ public class ProcessService
         return OS.CreateInstance(arguments);
     }
     
-    public int StartNewDedicatedServerApplication(int port, string adminNickname, bool showWindow)
+    public int StartNewDedicatedServerApplication(int port, string saveFileName, string adminNickname, bool showWindow)
     {
-        DedicatedServerArgs dedicatedServerArgs = new DedicatedServerArgs(!showWindow, port, adminNickname, OS.GetProcessId(), false);
+        DedicatedServerArgs dedicatedServerArgs = new DedicatedServerArgs(!showWindow, port, saveFileName, adminNickname, OS.GetProcessId(), false);
 
         return StartNewApplication(dedicatedServerArgs.GetArrayToStartDedicatedServer());
     }
