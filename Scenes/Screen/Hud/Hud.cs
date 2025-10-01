@@ -12,6 +12,9 @@ public partial class Hud : Control
     [Export] [NotNull] public Button Test3 { get; set; }
     [Export] [NotNull] public Button LogChildren { get; set; }
     [Export] [NotNull] public Label Info { get; set; }
+    [Export] [NotNull] public Button SaveButton { get; set; }
+    [Export] [NotNull] public Button ExitButton { get; set; }
+    [Export] [NotNull] public TextEdit SaveTextEdit { get; set; }
     
     private World.World _world;
     private Synchronizer _synchronizer;
@@ -36,6 +39,9 @@ public partial class Hud : Control
         Test2.Pressed += () => { _world.Test2(); };
         Test3.Pressed += () => { _world.Test3(); };
         LogChildren.Pressed += () => { _world.StateCheckerService.LogState(); _world.StateCheckerService.StateCheckRequest(); };
+
+        ExitButton.Pressed += () => { Service.MainScene.StartMainMenu(); };
+        SaveButton.Pressed += () => { _world.Data.SaveLoad.Save(SaveTextEdit.Text); };
     }
 
     private void ConnectToEvents()

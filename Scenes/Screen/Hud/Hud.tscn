@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bpu3rci74u6fm" path="res://Scenes/Screen/Hud/Hud.cs" id="1_63bhl"]
 
-[node name="Hud" type="Control" node_paths=PackedStringArray("Test1", "Test2", "Test3", "LogChildren", "Info")]
+[node name="Hud" type="Control" node_paths=PackedStringArray("Test1", "Test2", "Test3", "LogChildren", "Info", "SaveButton", "ExitButton", "SaveTextEdit")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,6 +15,9 @@ Test2 = NodePath("Test2")
 Test3 = NodePath("Test3")
 LogChildren = NodePath("Log")
 Info = NodePath("Label")
+SaveButton = NodePath("SaveButton")
+ExitButton = NodePath("ExitButton")
+SaveTextEdit = NodePath("SaveTextEdit")
 
 [node name="Test1" type="Button" parent="."]
 layout_mode = 1
@@ -80,3 +83,27 @@ text = "ЛОГ"
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="ExitButton" type="Button" parent="."]
+offset_left = 10.0
+offset_top = 563.0
+offset_right = 79.0
+offset_bottom = 594.0
+text = "В меню"
+
+[node name="SaveButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 604.0
+offset_right = 231.0
+offset_bottom = 635.0
+text = "СОХРАНИТЬ"
+
+[node name="SaveTextEdit" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 601.0
+offset_right = 118.0
+offset_bottom = 637.0
+text = "default"
+placeholder_text = "filename"

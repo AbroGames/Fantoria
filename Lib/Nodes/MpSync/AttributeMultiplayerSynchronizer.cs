@@ -7,10 +7,11 @@ using Godot;
 namespace Fantoria.Lib.Nodes.MpSync;
 
 /// <summary>
-/// This is a MultiplayerSynchronizer, which in the Init(Node observableNode) method automatically scans all properties and fields of observableNode marked with the Sync attribute and adds them to the SceneReplicationConfig as synchronized.
-/// This node cannot be added from the editor, since in that case it will not work correctly with MultiplayerSpawner. It is required that SceneReplicationConfig is set up before _EnterTree().
-/// That means either configuring it through the editor (in which case you should use the regular MultiplayerSynchronizer), or by calling Init(Node observableNode) before AddChild(attributeMultiplayerSynchronizer) (this is our case, and it only works from code).
+/// This is a MultiplayerSynchronizer that, in its constructor (Node observableNode), automatically scans all properties and fields of the observableNode marked with the Sync attribute and adds them to the SceneReplicationConfig as synchronized.
+/// This node cannot be added from the editor, as it would not work correctly with the MultiplayerSpawner in that case. The SceneReplicationConfig must be set up before _EnterTree().
+/// This means you should either configure it through the editor (in which case you should use the regular MultiplayerSynchronizer) or call the constructor (Node observableNode) before AddChild(attributeMultiplayerSynchronizer). This is our case, and it only works from code.
 /// </summary>
+// ReSharper disable once Godot.MissingParameterlessConstructor
 public partial class AttributeMultiplayerSynchronizer : MultiplayerSynchronizer
 {
 
