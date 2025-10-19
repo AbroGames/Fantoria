@@ -12,7 +12,7 @@ public partial class MapPointDataStorage : Node, ISerializableStorage
     [MessagePackObject]
     public record InnerStorage
     {
-        [Key(0)] public long NextId;
+        [Key(0)] public long NextId = 1; // Id=0 was reserved for uninitialized object
         [Key(1)] public Dictionary<long, MapPointData> MapPointById = new();
     }
     
@@ -21,6 +21,8 @@ public partial class MapPointDataStorage : Node, ISerializableStorage
 
     public void AddMapPoint(MapPointData mapPoint)
     {
+        if (mapPoint.Id == 0) mapPoint.Id = _innerStorage.NextId++;
+        
         AddMapPointLocal(mapPoint);
         Rpc(MethodName.AddMapPointRpc, Serialize(mapPoint));
     }

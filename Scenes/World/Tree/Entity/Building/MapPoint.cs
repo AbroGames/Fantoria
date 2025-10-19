@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Fantoria.Scenes.World.Data;
 using Fantoria.Scenes.World.Data.MapPoint;
 using Fantoria.Scenes.World.Services;
@@ -11,14 +12,34 @@ namespace Fantoria.Scenes.World.Tree.Entity.Building;
 public partial class MapPoint : Node2D
 {
     
-    public MapPointData Data { get; private set; }
+    public MapPointData Data { get; private set; } //TODO Как связать их на клиенте? Через Export + Sync по id?
 
     public void UpdatePosition(Vector2 position)
     {
         Position = position;
         Data.PositionX = Position.X;
         Data.PositionY = Position.Y;
-    } 
+    }
+
+    public MapPoint Init(MapPointData data)
+    {
+        Data = data;
+        Position = Vec(data.PositionX, data.PositionY);
+        return this;
+    }
+
+    public static MapPoint Create(PackedScene scene, MapPointDataStorage storage, Action<MapPointData> init = null)
+    {
+        MapPointData mapPointData = new MapPointData();
+        init?.Invoke(mapPointData);
+        storage.AddMapPoint(mapPointData);
+        
+        MapPoint mapPoint = scene.Instantiate<MapPoint>();
+        mapPoint.Init(mapPointData);
+        return mapPoint;
+        
+        //TODO return scene.Instantiate<MapPoint>().Init(mapPointData);
+    }
 
     public class Loader : IWorldTreeLoader
     {
@@ -42,8 +63,7 @@ public partial class MapPoint : Node2D
             foreach (MapPointData mapPointData in world.Data.MapPoint.MapPointById.Values)
             {
                 MapPoint mapPoint = _mapPointById[mapPointData.Id];
-                mapPoint.Position = Vec(mapPointData.PositionX, mapPointData.PositionY);
-                mapPoint.Data = mapPointData;
+                mapPoint.Init(mapPointData);
             }
         }
     }
