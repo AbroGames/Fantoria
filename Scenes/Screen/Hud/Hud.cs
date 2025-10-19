@@ -41,7 +41,7 @@ public partial class Hud : Control
         LogChildren.Pressed += () => { _world.StateCheckerService.LogState(); _world.StateCheckerService.StateCheckRequest(); };
 
         ExitButton.Pressed += () => { Service.MainScene.StartMainMenu(); };
-        SaveButton.Pressed += () => { _world.Data.SaveLoad.Save(SaveTextEdit.Text); };
+        SaveButton.Pressed += () => { _world.TestSave(SaveTextEdit.Text); };
     }
 
     private void ConnectToEvents()

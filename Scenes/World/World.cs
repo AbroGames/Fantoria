@@ -48,7 +48,7 @@ public partial class World : Node2D
             data.PositionX = Random.Shared.Next(0, 600);
             data.PositionY = Random.Shared.Next(0, 600);
         });
-        this.AddChildWithUniqueName(mp1, "MapPoint");
+        Tree.MapSurface.AddChildWithUniqueName(mp1, "MapPoint");
         
         //TODO Второй способ создать MapPoint
         MapPointData mapPointData = new MapPointData();
@@ -57,7 +57,7 @@ public partial class World : Node2D
         
         Data.MapPoint.AddMapPoint(mapPointData);
         MapPoint mp2 = PackedScenes.MapPoint.Instantiate<MapPoint>().Init(mapPointData);
-        this.AddChildWithUniqueName(mp2, "MapPoint");
+        Tree.MapSurface.AddChildWithUniqueName(mp2, "MapPoint");
         
         //TODO Третий способ создать MapPoint: отдельный объект WorldFactories, где лежат фабрики под все персистенсе объекты 
     }
@@ -74,5 +74,14 @@ public partial class World : Node2D
     private void Test3Rpc()
     {
         Log.Warning("Test 3 RPC called");
+    }
+    
+    //TODO Переделать на нормальный метод запроса сохранения с клиента на сервер, с проверкой прав
+    public void TestSave(string saveFileName) => RpcId(ServerId, MethodName.TestSaveRpc, saveFileName);
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void TestSaveRpc(string saveFileName)
+    {
+        Log.Warning("TestSave RPC called");
+        Data.SaveLoad.Save(saveFileName);
     }
 }
