@@ -5,7 +5,7 @@ namespace Fantoria.Scenes.Game.Net;
 public partial class Network : Node
 {
 
-    public static readonly int MaxSyncPacketSize = 65535 * 1024;
+    public static readonly int MaxSyncPacketSize = 1350 * 100;
     
     public MultiplayerApi Api { get; private set; }
     public NetworkStateMachine StateMachine { get; } = new();
@@ -116,6 +116,7 @@ public partial class Network : Node
             {
                 Api.MultiplayerPeer.DisconnectPeer(peer);
             }
+            Api.MultiplayerPeer.Close();
             Api.MultiplayerPeer = new OfflineMultiplayerPeer();
             StateMachine.SetState(NetworkStateMachine.State.NotInitialized);
             
